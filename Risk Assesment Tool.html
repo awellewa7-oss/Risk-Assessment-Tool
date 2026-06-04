@@ -1,0 +1,2420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BGI Ethiopia — Security Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   BGI SECURITY SYSTEM  —  DESIGN SYSTEM
+═══════════════════════════════════════════════════════════════ */
+:root {
+  --navy:      #1a2a4c;
+  --navy-dk:   #111d36;
+  --navy-lt:   #2c3e6b;
+  --red:       #c62828;
+  --red-lt:    #ffebee;
+  --orange:    #e65100;
+  --orange-lt: #fff3e0;
+  --gold:      #f5a623;
+  --yellow-lt: #fffde7;
+  --green:     #2e7d32;
+  --green-lt:  #e8f5e9;
+  --slate:     #e8edf5;
+  --slate-dk:  #b0bec5;
+  --white:     #ffffff;
+  --text:      #1a2a4c;
+  --text-lt:   #5a6a8a;
+  --border:    #d0d8e8;
+  --bg:        #f4f6fb;
+  --panel:     #ffffff;
+
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --shadow: 0 2px 12px rgba(26,42,76,0.10);
+  --shadow-lg: 0 8px 32px rgba(26,42,76,0.14);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--navy-lt);border-radius:3px}
+
+/* ── TYPOGRAPHY ── */
+h1,h2,h3,h4{font-family:'Syne',sans-serif;line-height:1.2}
+code,kbd,.mono{font-family:'DM Mono',monospace}
+
+/* ═══════════════════════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════════════════════ */
+.app-shell{display:grid;grid-template-columns:240px 1fr;grid-template-rows:56px 1fr;height:100vh;overflow:hidden}
+
+/* TOPBAR */
+.topbar{
+  grid-column:1/-1;
+  background:var(--navy-dk);
+  display:flex;align-items:center;gap:16px;
+  padding:0 20px;
+  border-bottom:2px solid var(--gold);
+  z-index:100;
+}
+.topbar-logo{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;
+  color:var(--white);letter-spacing:.02em;
+}
+.topbar-logo .badge{
+  background:var(--gold);color:var(--navy-dk);
+  font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:3px;
+  letter-spacing:.08em;text-transform:uppercase;
+}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.topbar-plant{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:var(--white);padding:5px 12px;border-radius:var(--r-sm);
+  font-size:.78rem;font-family:'DM Mono',monospace;cursor:pointer;outline:none;
+}
+.topbar-plant option{background:var(--navy-dk)}
+.topbar-time{
+  font-family:'DM Mono',monospace;font-size:.78rem;
+  color:var(--gold);opacity:.9;
+}
+.confidential-badge{
+  background:rgba(198,40,40,.15);border:1px solid rgba(198,40,40,.4);
+  color:#ff8a80;font-size:.65rem;letter-spacing:.1em;
+  padding:3px 8px;border-radius:3px;text-transform:uppercase;font-weight:600;
+}
+
+/* SIDEBAR */
+.sidebar{
+  background:var(--navy);
+  overflow-y:auto;
+  padding:12px 0;
+  border-right:1px solid rgba(255,255,255,.06);
+}
+.nav-section-label{
+  font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);padding:14px 16px 6px;font-weight:600;
+  font-family:'DM Mono',monospace;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 16px;cursor:pointer;
+  font-size:.82rem;color:rgba(255,255,255,.65);
+  border-left:3px solid transparent;
+  transition:all .15s;font-weight:500;
+  user-select:none;
+}
+.nav-item:hover{background:rgba(255,255,255,.05);color:var(--white)}
+.nav-item.active{
+  background:rgba(245,166,35,.08);
+  border-left-color:var(--gold);
+  color:var(--gold);font-weight:600;
+}
+.nav-item .icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{
+  margin-left:auto;background:var(--red);color:#fff;
+  font-size:.6rem;padding:1px 5px;border-radius:10px;
+  font-family:'DM Mono',monospace;font-weight:600;
+}
+.nav-badge.green{background:var(--green)}
+.nav-badge.gold{background:var(--gold);color:var(--navy-dk)}
+
+/* MAIN CONTENT */
+.main-content{overflow-y:auto;padding:20px;background:var(--bg)}
+
+/* ═══════════════════════════════════════════════════════════════
+   SHARED COMPONENTS
+═══════════════════════════════════════════════════════════════ */
+.page{display:none}
+.page.active{display:block}
+
+.page-header{margin-bottom:20px}
+.page-header h2{font-size:1.4rem;color:var(--navy-dk);margin-bottom:3px}
+.page-header p{font-size:.82rem;color:var(--text-lt)}
+
+.card{
+  background:var(--panel);border-radius:var(--r-lg);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.card-header{
+  padding:12px 16px;
+  background:var(--navy);
+  display:flex;align-items:center;gap:8px;
+}
+.card-header h3{font-family:'Syne',sans-serif;font-size:.9rem;color:var(--white);font-weight:700}
+.card-header .subtitle{font-size:.72rem;color:rgba(255,255,255,.5);margin-left:auto;font-family:'DM Mono',monospace}
+.card-body{padding:16px}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.mb-16{margin-bottom:16px}
+.mb-8{margin-bottom:8px}
+
+/* STAT CARDS */
+.stat-card{
+  background:var(--panel);border-radius:var(--r-md);
+  border:1px solid var(--border);
+  padding:14px 16px;
+  box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--c,var(--navy));
+}
+.stat-card .stat-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-lt);margin-bottom:6px;font-weight:600}
+.stat-card .stat-value{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--navy-dk);line-height:1}
+.stat-card .stat-sub{font-size:.72rem;color:var(--text-lt);margin-top:4px}
+.stat-card.red{--c:var(--red)} .stat-card.red .stat-value{color:var(--red)}
+.stat-card.orange{--c:var(--orange)} .stat-card.orange .stat-value{color:var(--orange)}
+.stat-card.gold{--c:var(--gold)} .stat-card.gold .stat-value{color:#b8860b}
+.stat-card.green{--c:var(--green)} .stat-card.green .stat-value{color:var(--green)}
+.stat-card.navy{--c:var(--gold)}
+
+/* RISK BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.06em;font-family:'DM Mono',monospace}
+.badge-critical{background:var(--red);color:#fff}
+.badge-high{background:var(--orange);color:#fff}
+.badge-medium{background:#f9a825;color:#333}
+.badge-low{background:var(--green);color:#fff}
+.badge-open{background:#ffebee;color:var(--red);border:1px solid #ffcdd2}
+.badge-progress{background:#fff3e0;color:var(--orange);border:1px solid #ffe0b2}
+.badge-closed{background:#e8f5e9;color:var(--green);border:1px solid #c8e6c9}
+.badge-na{background:var(--slate);color:var(--text-lt);border:1px solid var(--border)}
+
+/* TABLES */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+thead th{
+  background:var(--navy);color:var(--white);
+  padding:9px 10px;text-align:left;
+  font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;
+  letter-spacing:.04em;white-space:nowrap;
+  position:sticky;top:0;z-index:2;
+}
+thead th:first-child{border-radius:0}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:hover{background:var(--slate)}
+tbody td{padding:8px 10px;vertical-align:middle;color:var(--text)}
+tbody td .mono{font-size:.72rem;color:var(--text-lt)}
+
+/* FORMS */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-row.cols-3{grid-template-columns:1fr 1fr 1fr}
+.form-row.cols-1{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:.72rem;font-weight:600;color:var(--text-lt);text-transform:uppercase;letter-spacing:.06em}
+.form-group input,.form-group select,.form-group textarea{
+  padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--r-sm);
+  font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--text);
+  background:var(--white);transition:border-color .15s,box-shadow .15s;outline:none;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  border-color:var(--navy);box-shadow:0 0 0 3px rgba(26,42,76,.08);
+}
+.form-group textarea{resize:vertical;min-height:70px}
+.auto-field{background:var(--slate)!important;color:var(--text-lt)!important;cursor:not-allowed}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:var(--r-sm);
+  font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;
+  cursor:pointer;border:none;transition:all .15s;outline:none;
+}
+.btn-primary{background:var(--navy);color:var(--white)}
+.btn-primary:hover{background:var(--navy-lt)}
+.btn-danger{background:var(--red);color:var(--white)}
+.btn-danger:hover{background:#b71c1c}
+.btn-ghost{background:transparent;color:var(--text-lt);border:1.5px solid var(--border)}
+.btn-ghost:hover{border-color:var(--navy);color:var(--navy)}
+.btn-gold{background:var(--gold);color:var(--navy-dk)}
+.btn-gold:hover{background:#e0951a}
+.btn-sm{padding:5px 10px;font-size:.75rem}
+.btn-group{display:flex;gap:8px;flex-wrap:wrap}
+
+/* SECTION HEADER BAR */
+.section-bar{
+  background:var(--navy-lt);color:var(--white);
+  padding:8px 14px;border-radius:var(--r-sm);
+  font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;
+  margin-bottom:12px;letter-spacing:.02em;
+}
+
+/* FILTER BAR */
+.filter-bar{
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+  padding:10px 14px;background:var(--slate);
+  border-radius:var(--r-sm);margin-bottom:12px;
+}
+.filter-bar select,.filter-bar input{
+  padding:5px 10px;border:1.5px solid var(--border);
+  border-radius:var(--r-sm);font-size:.78rem;background:var(--white);
+  color:var(--text);outline:none;
+}
+.filter-label{font-size:.72rem;color:var(--text-lt);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(17,29,54,.6);
+  z-index:1000;display:none;align-items:center;justify-content:center;
+  padding:20px;backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--white);border-radius:var(--r-lg);
+  width:100%;max-width:680px;max-height:90vh;overflow-y:auto;
+  box-shadow:var(--shadow-lg);animation:modalIn .2s ease;
+}
+@keyframes modalIn{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.modal-header{
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--white);z-index:2;
+}
+.modal-header h3{font-family:'Syne',sans-serif;font-size:1rem;color:var(--navy-dk)}
+.modal-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-lt);padding:4px 8px;border-radius:4px}
+.modal-close:hover{background:var(--slate)}
+.modal-body{padding:20px}
+.modal-footer{
+  padding:12px 20px;border-top:1px solid var(--border);
+  display:flex;gap:8px;justify-content:flex-end;
+  position:sticky;bottom:0;background:var(--white);
+}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:20px;right:20px;z-index:2000;display:flex;flex-direction:column;gap:8px}
+.toast{
+  background:var(--navy-dk);color:var(--white);
+  padding:10px 16px;border-radius:var(--r-sm);
+  font-size:.82rem;font-weight:500;
+  box-shadow:var(--shadow-lg);
+  animation:toastIn .25s ease;
+  display:flex;align-items:center;gap:8px;
+  border-left:4px solid var(--gold);
+  min-width:260px;
+}
+.toast.success{border-left-color:var(--green)}
+.toast.error{border-left-color:var(--red)}
+@keyframes toastIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+
+/* SCORE GAUGE */
+.score-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'DM Mono',monospace;font-size:.8rem;font-weight:500;
+  padding:4px 10px;border-radius:20px;
+}
+.score-1,.score-2{background:#ffebee;color:#c62828}
+.score-3{background:#fffde7;color:#f57f17}
+.score-4{background:#e8f5e9;color:#2e7d32}
+.score-5{background:#e3f2fd;color:#1565c0}
+
+/* PROGRESS BAR */
+.progress-bar-wrap{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-bar-fill{height:100%;border-radius:3px;transition:width .4s ease;background:var(--navy)}
+
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px}
+.tab{
+  padding:8px 16px;font-size:.8rem;font-weight:600;cursor:pointer;
+  color:var(--text-lt);border-bottom:3px solid transparent;margin-bottom:-2px;
+  transition:all .15s;font-family:'Syne',sans-serif;letter-spacing:.02em;
+}
+.tab:hover{color:var(--navy)}
+.tab.active{color:var(--navy);border-bottom-color:var(--gold)}
+
+/* RISK MATRIX MINI */
+.risk-bar{display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px}
+.risk-bar-seg{flex:1;border-radius:2px}
+
+/* EMPTY STATE */
+.empty-state{
+  text-align:center;padding:48px 20px;color:var(--text-lt);
+}
+.empty-state .icon{font-size:2.5rem;margin-bottom:12px;opacity:.4}
+.empty-state p{font-size:.85rem}
+
+/* SCORE INPUT CELL */
+.score-select{
+  width:60px;padding:4px;border:1.5px solid var(--border);
+  border-radius:var(--r-sm);font-family:'DM Mono',monospace;font-size:.8rem;
+  text-align:center;outline:none;cursor:pointer;
+}
+.compliance-check{cursor:pointer;width:18px;height:18px;accent-color:var(--green)}
+
+/* EXPORT BTN */
+.export-bar{
+  display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px;
+}
+
+/* ALERT BOX */
+.alert{padding:10px 14px;border-radius:var(--r-sm);font-size:.8rem;margin-bottom:12px;display:flex;gap:8px;align-items:flex-start}
+.alert-critical{background:var(--red-lt);border-left:4px solid var(--red);color:var(--red)}
+.alert-warning{background:var(--orange-lt);border-left:4px solid var(--orange);color:var(--orange)}
+.alert-info{background:var(--slate);border-left:4px solid var(--navy);color:var(--navy)}
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD SPECIFIC
+═══════════════════════════════════════════════════════════════ */
+.scorecard-table tbody td:nth-child(n+3){text-align:center}
+.domain-score{
+  display:inline-block;width:28px;height:28px;line-height:28px;
+  border-radius:50%;font-size:.75rem;font-weight:700;text-align:center;
+  font-family:'DM Mono',monospace;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ASSESSMENT PAGE
+═══════════════════════════════════════════════════════════════ */
+.assessment-section{margin-bottom:20px}
+.assessment-item{
+  display:grid;grid-template-columns:32px 1fr 80px 60px 1fr 140px 90px 100px;
+  gap:8px;align-items:center;
+  padding:7px 10px;border-bottom:1px solid var(--border);
+  font-size:.78rem;
+}
+.assessment-item:last-child{border-bottom:none}
+.assessment-item:hover{background:var(--slate)}
+.assessment-item.header{
+  background:rgba(26,42,76,.06);font-weight:600;
+  font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-lt);
+  padding:6px 10px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE TWEAKS
+═══════════════════════════════════════════════════════════════ */
+@media(max-width:900px){
+  .app-shell{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .grid-4{grid-template-columns:1fr 1fr}
+  .grid-3{grid-template-columns:1fr 1fr}
+  .assessment-item{grid-template-columns:24px 1fr 50px 50px;gap:4px}
+  .assessment-item>*:nth-child(n+5){display:none}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PRINT
+═══════════════════════════════════════════════════════════════ */
+@media print{
+  .sidebar,.topbar,.btn,.filter-bar,.modal-overlay,.toast-container{display:none!important}
+  .app-shell{display:block}
+  .main-content{overflow:visible;padding:0}
+  .page{display:block!important;page-break-after:always}
+  table{font-size:.7rem}
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+<!-- ═══ TOPBAR ═══ -->
+<header class="topbar">
+  <div class="topbar-logo">
+    <span style="font-size:1.3rem">🏭</span>
+    BGI Ethiopia
+    <span class="badge">Security</span>
+  </div>
+  <span style="color:rgba(255,255,255,.25);font-size:.9rem">|</span>
+  <span style="color:rgba(255,255,255,.5);font-size:.78rem;font-family:'DM Mono',monospace">Enterprise Security Management System</span>
+  <div class="topbar-right">
+    <select class="topbar-plant" id="globalPlantFilter" onchange="applyGlobalFilter()">
+      <option value="All">All Plants</option>
+      <option>Kombolcha</option>
+      <option>STG</option>
+      <option>Hawassa</option>
+      <option>Castel-Winery</option>
+      <option>Meta</option>
+      <option>Raya</option>
+      <option>Zebidar</option>
+    </select>
+    <span class="confidential-badge">🔒 Confidential</span>
+    <span class="topbar-time" id="clock"></span>
+  </div>
+</header>
+
+<!-- ═══ SIDEBAR ═══ -->
+<nav class="sidebar">
+  <div class="nav-section-label">Overview</div>
+  <div class="nav-item active" onclick="showPage('dashboard')">
+    <span class="icon">📊</span>Dashboard
+  </div>
+
+  <div class="nav-section-label">Operations</div>
+  <div class="nav-item" onclick="showPage('assets')">
+    <span class="icon">🏷️</span>Critical Assets
+    <span class="nav-badge red" id="nb-critical">—</span>
+  </div>
+  <div class="nav-item" onclick="showPage('assessment')">
+    <span class="icon">✅</span>Plant Assessment
+  </div>
+  <div class="nav-item" onclick="showPage('guards')">
+    <span class="icon">👮</span>Guard Headcount
+  </div>
+
+  <div class="nav-section-label">Risk & Compliance</div>
+  <div class="nav-item" onclick="showPage('risks')">
+    <span class="icon">⚠️</span>Risk Register
+    <span class="nav-badge red" id="nb-risks">—</span>
+  </div>
+  <div class="nav-item" onclick="showPage('actions')">
+    <span class="icon">📋</span>Action Plan
+    <span class="nav-badge gold" id="nb-actions">—</span>
+  </div>
+  <div class="nav-item" onclick="showPage('incidents')">
+    <span class="icon">🚨</span>Incident Log
+    <span class="nav-badge" id="nb-incidents">—</span>
+  </div>
+
+  <div class="nav-section-label">Personnel</div>
+  <div class="nav-item" onclick="showPage('expats')">
+    <span class="icon">🛂</span>Expat Register
+  </div>
+
+  <div class="nav-section-label">Admin</div>
+  <div class="nav-item" onclick="showPage('settings')">
+    <span class="icon">⚙️</span>Settings
+  </div>
+  <div class="nav-item" onclick="exportData()">
+    <span class="icon">💾</span>Export Data
+  </div>
+</nav>
+
+<!-- ═══ MAIN CONTENT ═══ -->
+<main class="main-content" id="mainContent">
+
+<!-- ────────────────────────────────────────────────────────────
+     PAGE: DASHBOARD
+──────────────────────────────────────────────────────────────── -->
+<div id="page-dashboard" class="page active">
+  <div class="page-header">
+    <h2>Enterprise Security Dashboard</h2>
+    <p>BGI Ethiopia Brewery · 7 Facilities · 10 Security Domains · ISO 31000:2018 Aligned</p>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="grid-4 mb-16">
+    <div class="stat-card red">
+      <div class="stat-label">Critical Assets</div>
+      <div class="stat-value" id="dash-critical">0</div>
+      <div class="stat-sub">Score ≥ 20</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-label">High Risk Assets</div>
+      <div class="stat-value" id="dash-high">0</div>
+      <div class="stat-sub">Score 10–19</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-label">Open Actions</div>
+      <div class="stat-value" id="dash-open-actions">0</div>
+      <div class="stat-sub">Pending resolution</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Total Assets</div>
+      <div class="stat-value" id="dash-total-assets">0</div>
+      <div class="stat-sub">Across all facilities</div>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-16">
+    <!-- Plant Scorecard -->
+    <div class="card">
+      <div class="card-header">
+        <h3>🏭 Plant Security Scorecard</h3>
+        <span class="subtitle">Avg score 1–5 per domain</span>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div class="table-wrap">
+          <table class="scorecard-table">
+            <thead>
+              <tr>
+                <th>Plant</th>
+                <th>Perim.</th>
+                <th>Access</th>
+                <th>Guard</th>
+                <th>Whse</th>
+                <th>Emerg.</th>
+                <th>Overall</th>
+              </tr>
+            </thead>
+            <tbody id="scorecardBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Asset Risk by Plant -->
+    <div class="card">
+      <div class="card-header">
+        <h3>🏷️ Critical Assets by Plant</h3>
+        <span class="subtitle">Risk distribution</span>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Plant</th>
+                <th>Total</th>
+                <th>Critical</th>
+                <th>High</th>
+                <th>Med</th>
+                <th>Low</th>
+                <th>% C+H</th>
+              </tr>
+            </thead>
+            <tbody id="assetByPlantBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Incidents + Open Risks -->
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div class="card-header">
+        <h3>🚨 Recent Incidents</h3>
+        <span class="subtitle">Last 10</span>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Plant</th><th>Type</th><th>Severity</th><th>Status</th></tr></thead>
+            <tbody id="recentIncidentsBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="noIncidents" style="display:none">
+          <div class="icon">🚨</div><p>No incidents logged</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>⚠️ Open Risks</h3>
+        <span class="subtitle">Critical & High priority</span>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Plant</th><th>Risk</th><th>Rating</th><th>Status</th></tr></thead>
+            <tbody id="openRisksBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="noRisks" style="display:none">
+          <div class="icon">✅</div><p>No open risks</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guard Headcount Summary -->
+  <div class="card mb-16">
+    <div class="card-header">
+      <h3>👮 Guard Force Headcount Summary</h3>
+      <span class="subtitle">Enterprise strength overview</span>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Plant / Location</th>
+              <th>Security Model</th>
+              <th>Contract Guards</th>
+              <th>Permanent Guards</th>
+              <th>Supervisor</th>
+              <th>Total Deployed</th>
+              <th>Required</th>
+              <th>Variance</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="guardSummaryBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────────────────────
+     PAGE: CRITICAL ASSETS
+──────────────────────────────────────────────────────────────── -->
+<div id="page-assets" class="page">
+  <div class="page-header">
+    <h2>🏷️ Critical Asset Register</h2>
+    <p>All critical physical and operational assets across BGI facilities · Risk scores auto-calculate</p>
+  </div>
+
+  <!-- Summary KPIs -->
+  <div class="grid-4 mb-16">
+    <div class="stat-card navy"><div class="stat-label">Total Assets</div><div class="stat-value" id="a-total">33</div></div>
+    <div class="stat-card red"><div class="stat-label">🔴 Critical</div><div class="stat-value" id="a-critical">0</div><div class="stat-sub">Score ≥ 20</div></div>
+    <div class="stat-card orange"><div class="stat-label">🟠 High</div><div class="stat-value" id="a-high">0</div><div class="stat-sub">Score 10–19</div></div>
+    <div class="stat-card gold"><div class="stat-label">% Critical+High</div><div class="stat-value" id="a-pct">—</div></div>
+  </div>
+
+  <div class="export-bar">
+    <button class="btn btn-ghost btn-sm" onclick="printSection('page-assets')">🖨 Print</button>
+    <button class="btn btn-ghost btn-sm" onclick="exportTableCSV('assetsTable','BGI_Critical_Assets')">📥 CSV</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal('assetModal')">＋ Add Asset</button>
+  </div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Filter:</span>
+    <select id="assetPlantFilter" onchange="renderAssets()">
+      <option value="">All Plants</option>
+      <option>Kombolcha</option><option>STG — Main Gate</option>
+      <option>STG — Kera Tech. Workshop</option>
+      <option>Hawassa</option><option>Castel-Winery</option>
+      <option>Meta</option><option>Raya</option><option>Zebidar</option>
+    </select>
+    <select id="assetRatingFilter" onchange="renderAssets()">
+      <option value="">All Ratings</option>
+      <option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option>
+    </select>
+    <select id="assetCatFilter" onchange="renderAssets()">
+      <option value="">All Categories</option>
+      <option>Electrical Infrastructure</option>
+      <option>Production Equipment</option>
+      <option>Inventory / Warehouse</option>
+      <option>IT Infrastructure</option>
+      <option>Utilities / Water</option>
+      <option>Transport Assets</option>
+      <option>Hazardous Materials</option>
+      <option>Access Infrastructure</option>
+      <option>Residential Security</option>
+    </select>
+    <input type="text" placeholder="Search asset..." id="assetSearch" oninput="renderAssets()" style="flex:1;min-width:140px">
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table id="assetsTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Plant</th>
+            <th>Asset Name</th>
+            <th>Category</th>
+            <th>Asset ID</th>
+            <th>Criticality</th>
+            <th>Value (ETB)</th>
+            <th>Owner</th>
+            <th>Location</th>
+            <th>Vulnerability</th>
+            <th>Threat</th>
+            <th>Risk Score</th>
+            <th>Rating</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="assetsBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="assetsEmpty" style="display:none">
+      <div class="icon">🏷️</div><p>No assets match the current filter</p>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────────────────────
+     PAGE: PLANT ASSESSMENT
+──────────────────────────────────────────────────────────────── -->
+<div id="page-assessment" class="page">
+  <div class="page-header">
+    <h2>✅ Plant Security Assessment</h2>
+    <p>10-domain assessment · Score 1–5 per control · Overall scores feed the Dashboard</p>
+  </div>
+
+  <div class="filter-bar mb-16">
+    <span class="filter-label">Plant:</span>
+    <select id="assessPlantSelect" onchange="renderAssessment()" style="font-weight:600">
+      <option>Kombolcha</option><option>STG</option><option>Hawassa</option>
+      <option>Castel-Winery</option><option>Meta</option><option>Raya</option><option>Zebidar</option>
+    </select>
+    <span style="margin-left:auto;font-size:.78rem;color:var(--text-lt)">Supervisor: <strong id="assessSupervisor">—</strong></span>
+  </div>
+
+  <!-- Domain Score Summary -->
+  <div class="card mb-16">
+    <div class="card-header"><h3>📊 Domain Score Summary</h3><span class="subtitle">Auto-calculated from sections below</span></div>
+    <div class="card-body">
+      <div id="domainScoreSummary" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px"></div>
+    </div>
+  </div>
+
+  <!-- Assessment Sections -->
+  <div id="assessmentSections"></div>
+</div>
+
+<!-- ────────────────────────────────────────────────────────────
+     PAGE: GUARD HEADCOUNT
+──────────────────────────────────────────────────────────────── -->
+<div id="page-guards" class="page">
+  <div class="page-header">
+    <h2>👮 Guard Force Headcount</h2>
+    <p>All plants and sub-locations · Variance auto-calculates · 24h-on/48h-off contract rotation</p>
+  </div>
+
+  <div class="grid-4 mb-16">
+    <div class="stat-card navy"><div class="stat-label">Total Deployed</div><div class="stat-value" id="g-total">0</div></div>
+    <div class="stat-card"><div class="stat-label">Contract Guards</div><div class="stat-value" id="g-contract">0</div></div>
+    <div class="stat-card"><div class="stat-label">Permanent Guards</div><div class="stat-value" id="g-permanent">0</div></div>
+    <div class="stat-card green"><div class="stat-label">At/Above Strength</div><div class="stat-value" id="g-atstrength">0</div></div>
+  </div>
+
+  <div class="export-bar">
+    <button class="btn btn-ghost btn-sm" onclick="exportTableCSV('guardsTable','BGI_Guard_Headcount')">📥 CSV</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal('guardModal')">＋ Add Location</button>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table id="guardsTable">
+        <thead>
+          <tr>
+            <th>Plant / Location</th>
+            <th>Security Model</th>
+            <th>Contract Guards</th>
+            <th>Permanent Guards</th>
+            <th>Supervisor</th>
+            <th>Total Deployed</th>
+            <th>Required Strength</th>
+            <th>Variance</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="guardsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────────────────────
+     PAGE: RISK REGISTER
+──────────────────────────────────────────────────────────────── -->
+<div id="page-risks" class="page">
+  <div class="page-header">
+    <h2>⚠️ Risk Register</h2>
+    <p>Risk Score = Likelihood × Impact · Rating auto-calculates</p>
+  </div>
+
+  <div class="export-bar">
+    <button class="btn btn-ghost btn-sm" onclick="exportTableCSV('risksTable','BGI_Risk_Register')">📥 CSV</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal('riskModal')">＋ Add Risk</button>
+  </div>
+
+  <div class="filter-bar">
+    <select id="riskPlantFilter" onchange="renderRisks()">
+      <option value="">All Plants</option>
+      <option>Kombolcha</option><option>STG</option><option>Hawassa</option>
+      <option>Castel-Winery</option><option>Meta</option><option>Raya</option><option>Zebidar</option><option>All Plants</option>
+    </select>
+    <select id="riskRatingFilter" onchange="renderRisks()">
+      <option value="">All Ratings</option>
+      <option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option>
+    </select>
+    <select id="riskStatusFilter" onchange="renderRisks()">
+      <option value="">All Status</option>
+      <option>Open</option><option>In Progress</option><option>Closed</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table id="risksTable">
+        <thead>
+          <tr>
+            <th>#</th><th>Plant</th><th>Risk Description</th><th>Category</th>
+            <th>Likelihood (1–5)</th><th>Impact (1–5)</th><th>Score</th><th>Rating</th>
+            <th>Owner</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="risksBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="risksEmpty" style="display:none">
+      <div class="icon">⚠️</div><p>No risks logged yet</p>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────────────────────
+     PAGE: ACTION PLAN
+──────────────────────────────────────────────────────────────── -->
+<div id="page-actions" class="page">
+  <div class="page-header">
+    <h2>📋 Corrective Action Plan</h2>
+    <p>Track all security remediation actions with owners and deadlines</p>
+  </div>
+
+  <div class="export-bar">
+    <button class="btn btn-ghost btn-sm" onclick="exportTableCSV('actionsTable','BGI_Action_Plan')">📥 CSV</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal('actionModal')">＋ Add Action</button>
+  </div>
+
+  <div class="filter-bar">
+    <select id="actionPlantFilter" onchange="renderActions()">
+      <option value="">All Plants</option>
+      <option>Kombolcha</option><option>STG</option><option>Hawassa</option>
+      <option>Castel-Winery</option><option>Meta</option><option>Raya</option><option>Zebidar</option>
+    </select>
+    <select id="actionStatusFilter" onchange="renderActions()">
+      <option value="">All Status</option>
+      <option>Open</option><option>In Progress</option><option>Closed</option>
+    </select>
+    <select id="actionPriorityFilter" onchange="renderActions()">
+      <option value="">All Priority</option>
+      <option>Critical</option><option>High</option><option>Medium</option><option>Low</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table id="actionsTable">
+        <thead>
+          <tr>
+            <th>#</th><th>Plant</th><th>Action Description</th><th>Priority</th>
+            <th>Owner</th><th>Due Date</th><th>Budget (ETB)</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="actionsBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="actionsEmpty" style="display:none">
+      <div class="icon">📋</div><p>No actions logged yet</p>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────────────────────
+     PAGE: INCIDENT LOG
+──────────────────────────────────────────────────────────────── -->
+<div id="page-incidents" class="page">
+  <div class="page-header">
+    <h2>🚨 Incident Log</h2>
+    <p>Record all security incidents across all facilities</p>
+  </div>
+
+  <div class="export-bar">
+    <button class="btn btn-ghost btn-sm" onclick="exportTableCSV('incidentsTable','BGI_Incident_Log')">📥 CSV</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal('incidentModal')">＋ Log Incident</button>
+  </div>
+
+  <div class="filter-bar">
+    <select id="incidentPlantFilter" onchange="renderIncidents()">
+      <option value="">All Plants</option>
+      <option>Kombolcha</option><option>STG</option><option>Hawassa</option>
+      <option>Castel-Winery</option><option>Meta</option><option>Raya</option><option>Zebidar</option>
+    </select>
+    <select id="incidentTypeFilter" onchange="renderIncidents()">
+      <option value="">All Types</option>
+      <option>Perimeter Breach</option><option>Insider Threat</option>
+      <option>Cargo Loss</option><option>Fire / Emergency</option>
+      <option>Access Violation</option><option>Vehicle Incident</option>
+      <option>Civil Unrest</option><option>Other</option>
+    </select>
+    <select id="incidentSeverityFilter" onchange="renderIncidents()">
+      <option value="">All Severity</option>
+      <option>Critical</option><option>High</option><option>Medium</option><option>Low</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table id="incidentsTable">
+        <thead>
+          <tr>
+            <th>INC #</th><th>Date</th><th>Plant</th><th>Type</th><th>Description</th>
+            <th>Severity</th><th>Reported By</th><th>Response</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="incidentsBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="incidentsEmpty">
+      <div class="icon">🚨</div><p>No incidents logged — great security posture!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────────────────────
+     PAGE: EXPAT REGISTER
+──────────────────────────────────────────────────────────────── -->
+<div id="page-expats" class="page">
+  <div class="page-header">
+    <h2>🛂 Expatriate Registration Register</h2>
+    <p>STG &amp; Castel-Winery Plants · Visa &amp; Work Permit Tracking · Auto-Status from Today's Date</p>
+  </div>
+
+  <div class="grid-4 mb-16">
+    <div class="stat-card navy"><div class="stat-label">Total Expats</div><div class="stat-value" id="exp-total">0</div></div>
+    <div class="stat-card red"><div class="stat-label">Visa Expired / Expiring</div><div class="stat-value" id="exp-visa-warn">0</div></div>
+    <div class="stat-card orange"><div class="stat-label">WP Expired / Expiring</div><div class="stat-value" id="exp-wp-warn">0</div></div>
+    <div class="stat-card green"><div class="stat-label">All Docs Valid</div><div class="stat-value" id="exp-valid">0</div></div>
+  </div>
+
+  <div class="export-bar">
+    <button class="btn btn-ghost btn-sm" onclick="exportTableCSV('expatsTable','BGI_Expat_Register')">📥 CSV</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal('expatModal')">＋ Register Expat</button>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table id="expatsTable">
+        <thead>
+          <tr>
+            <th>EXP #</th><th>Full Name</th><th>Nationality</th><th>Passport #</th>
+            <th>Passport Expiry</th><th>Passport Status</th>
+            <th>Visa Type</th><th>Visa Expiry</th><th>Visa Status</th>
+            <th>WP #</th><th>WP Expiry</th><th>WP Status</th>
+            <th>Plant</th><th>Position</th><th>Overall Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="expatsBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="expatsEmpty">
+      <div class="icon">🛂</div><p>No expats registered</p>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────────────────────
+     PAGE: SETTINGS
+──────────────────────────────────────────────────────────────── -->
+<div id="page-settings" class="page">
+  <div class="page-header">
+    <h2>⚙️ Settings</h2>
+    <p>System configuration and data management</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><h3>🗄️ Data Management</h3></div>
+      <div class="card-body">
+        <p style="font-size:.82rem;color:var(--text-lt);margin-bottom:14px">All data is stored in your browser's localStorage. Export regularly to back up your data.</p>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="exportData()">💾 Export All Data (JSON)</button>
+          <button class="btn btn-ghost" onclick="importData()">📤 Import Data</button>
+          <button class="btn btn-danger" onclick="clearAllData()">🗑️ Clear All Data</button>
+        </div>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>ℹ️ System Information</h3></div>
+      <div class="card-body" style="font-size:.82rem;line-height:1.9">
+        <p><strong>System:</strong> BGI Ethiopia Security Management System</p>
+        <p><strong>Version:</strong> v1.0 · Based on BGI_Security_Assessment_v10</p>
+        <p><strong>Storage:</strong> Browser localStorage (persistent)</p>
+        <p><strong>Hosting:</strong> Static HTML — deploy on Netlify, GitHub Pages, or Vercel</p>
+        <p><strong>Access:</strong> Confidential — restrict URL sharing</p>
+        <p style="margin-top:10px;color:var(--text-lt);font-size:.75rem">Supervisors: Ephrem Simano (Hawassa) · Erko Gonfa (Meta) · Belew Tadele (Kombolcha) · Girmay (Raya) · Kemal Aliyi (Castel-Winery) · Teklel Bereda (Zebidar) · Corporate (STG)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main><!-- /main-content -->
+</div><!-- /app-shell -->
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODALS
+═══════════════════════════════════════════════════════════════ -->
+
+<!-- ASSET MODAL -->
+<div class="modal-overlay" id="assetModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="assetModalTitle">Add Critical Asset</h3>
+      <button class="modal-close" onclick="closeModal('assetModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="assetEditId">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Plant / Location *</label>
+          <select id="a_plant">
+            <option value="">Select plant…</option>
+            <option>Kombolcha</option><option>STG — Main Gate</option>
+            <option>STG — Kera Tech. Workshop</option>
+            <option>Hawassa</option><option>Castel-Winery</option>
+            <option>Meta</option><option>Raya</option><option>Zebidar</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Asset Category *</label>
+          <select id="a_cat">
+            <option value="">Select…</option>
+            <option>Electrical Infrastructure</option>
+            <option>Production Equipment</option>
+            <option>Inventory / Warehouse</option>
+            <option>IT Infrastructure</option>
+            <option>Utilities / Water</option>
+            <option>Transport Assets</option>
+            <option>Hazardous Materials</option>
+            <option>Access Infrastructure</option>
+            <option>Residential Security</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row cols-1">
+        <div class="form-group"><label>Asset Name / Description *</label><input type="text" id="a_name" placeholder="e.g. Main Power Substation"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Asset ID / Tag</label><input type="text" id="a_id" placeholder="e.g. KOM-EL-001"></div>
+        <div class="form-group"><label>Asset Owner</label>
+          <select id="a_owner">
+            <option value="">Select…</option>
+            <option>Plant Manager</option><option>Plant Engineer</option>
+            <option>Production Manager</option><option>Warehouse Supervisor</option>
+            <option>IT Manager</option><option>IT Director</option>
+            <option>Logistics Supervisor</option><option>Logistics Director</option>
+            <option>Facilities Manager</option><option>Security Manager</option>
+            <option>HSE Manager</option><option>Winery Manager</option>
+            <option>QC Manager</option><option>Admin Manager</option>
+            <option>Technical Manager</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group">
+          <label>Criticality (1–5) *</label>
+          <select id="a_crit">
+            <option value="">Select…</option>
+            <option value="1">1 – Non-Critical</option>
+            <option value="2">2 – Minor Impact</option>
+            <option value="3">3 – Moderate</option>
+            <option value="4">4 – High Impact</option>
+            <option value="5">5 – Core Operations</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Vulnerability Level</label>
+          <select id="a_vuln"><option value="">Select…</option><option>Low</option><option>Medium</option><option>High</option></select>
+        </div>
+        <div class="form-group">
+          <label>Threat Exposure</label>
+          <select id="a_threat"><option value="">Select…</option><option>Low</option><option>Medium</option><option>High</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Replacement Value (ETB)</label><input type="number" id="a_value" placeholder="e.g. 4500000"></div>
+        <div class="form-group"><label>Physical Location / Zone</label><input type="text" id="a_location" placeholder="e.g. North Perimeter"></div>
+      </div>
+      <div class="form-row cols-1">
+        <div class="form-group"><label>Current Security Controls</label><textarea id="a_controls" placeholder="e.g. Fenced, padlocked, no CCTV" rows="2"></textarea></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>⚡ Risk Score (Auto)</label>
+          <input class="auto-field" id="a_score_display" readonly value="—">
+        </div>
+        <div class="form-group">
+          <label>⚡ Risk Rating (Auto)</label>
+          <input class="auto-field" id="a_rating_display" readonly value="—">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Review Date</label><input type="date" id="a_date"></div>
+        <div class="form-group"><label>Review Status</label>
+          <select id="a_status"><option>Open</option><option>In Progress</option><option>Closed</option><option>N/A</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('assetModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAsset()">💾 Save Asset</button>
+    </div>
+  </div>
+</div>
+
+<!-- RISK MODAL -->
+<div class="modal-overlay" id="riskModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="riskModalTitle">Add Risk</h3><button class="modal-close" onclick="closeModal('riskModal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="riskEditId">
+      <div class="form-row">
+        <div class="form-group"><label>Plant *</label>
+          <select id="r_plant"><option value="">Select…</option>
+            <option>Kombolcha</option><option>STG</option><option>Hawassa</option>
+            <option>Castel-Winery</option><option>Meta</option><option>Raya</option><option>Zebidar</option><option>All Plants</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Risk Category *</label>
+          <select id="r_cat"><option value="">Select…</option>
+            <option>Perimeter Breach</option><option>Insider Threat / Diversion</option>
+            <option>Access Control Failure</option><option>Cargo Hijacking</option>
+            <option>Emergency / Fire</option><option>Natural Disaster</option>
+            <option>Civil Unrest / Protest</option><option>IT / Cyber Risk</option>
+            <option>Personnel Safety</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row cols-1">
+        <div class="form-group"><label>Risk Description *</label><textarea id="r_desc" placeholder="Describe the risk…" rows="2"></textarea></div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Likelihood (1–5) *</label>
+          <select id="r_likelihood"><option value="">—</option>
+            <option value="1">1 – Rare</option><option value="2">2 – Unlikely</option>
+            <option value="3">3 – Possible</option><option value="4">4 – Likely</option><option value="5">5 – Almost Certain</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Impact (1–5) *</label>
+          <select id="r_impact"><option value="">—</option>
+            <option value="1">1 – Insignificant</option><option value="2">2 – Minor</option>
+            <option value="3">3 – Moderate</option><option value="4">4 – Major</option><option value="5">5 – Catastrophic</option>
+          </select>
+        </div>
+        <div class="form-group"><label>⚡ Risk Score</label><input class="auto-field" id="r_score_display" readonly value="—"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Risk Owner</label><input type="text" id="r_owner" placeholder="Name / Role"></div>
+        <div class="form-group"><label>Status</label>
+          <select id="r_status"><option>Open</option><option>In Progress</option><option>Closed</option></select>
+        </div>
+      </div>
+      <div class="form-row cols-1">
+        <div class="form-group"><label>Mitigation / Treatment</label><textarea id="r_mitigation" placeholder="Describe controls or treatment…" rows="2"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('riskModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveRisk()">💾 Save Risk</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACTION MODAL -->
+<div class="modal-overlay" id="actionModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="actionModalTitle">Add Action</h3><button class="modal-close" onclick="closeModal('actionModal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="actionEditId">
+      <div class="form-row">
+        <div class="form-group"><label>Plant *</label>
+          <select id="ac_plant"><option value="">Select…</option>
+            <option>Kombolcha</option><option>STG</option><option>Hawassa</option>
+            <option>Castel-Winery</option><option>Meta</option><option>Raya</option><option>Zebidar</option><option>All Plants</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Priority *</label>
+          <select id="ac_priority"><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select>
+        </div>
+      </div>
+      <div class="form-row cols-1">
+        <div class="form-group"><label>Action Description *</label><textarea id="ac_desc" placeholder="Describe the corrective action…" rows="2"></textarea></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Action Owner *</label><input type="text" id="ac_owner" placeholder="Name / Role"></div>
+        <div class="form-group"><label>Due Date</label><input type="date" id="ac_due"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Budget (ETB)</label><input type="number" id="ac_budget" placeholder="0"></div>
+        <div class="form-group"><label>Status</label>
+          <select id="ac_status"><option>Open</option><option>In Progress</option><option>Closed</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('actionModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAction()">💾 Save Action</button>
+    </div>
+  </div>
+</div>
+
+<!-- INCIDENT MODAL -->
+<div class="modal-overlay" id="incidentModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="incidentModalTitle">Log Incident</h3><button class="modal-close" onclick="closeModal('incidentModal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="incidentEditId">
+      <div class="form-row">
+        <div class="form-group"><label>Date *</label><input type="date" id="inc_date"></div>
+        <div class="form-group"><label>Plant *</label>
+          <select id="inc_plant"><option value="">Select…</option>
+            <option>Kombolcha</option><option>STG</option><option>Hawassa</option>
+            <option>Castel-Winery</option><option>Meta</option><option>Raya</option><option>Zebidar</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Incident Type *</label>
+          <select id="inc_type"><option value="">Select…</option>
+            <option>Perimeter Breach</option><option>Insider Threat</option>
+            <option>Cargo Loss</option><option>Fire / Emergency</option>
+            <option>Access Violation</option><option>Vehicle Incident</option>
+            <option>Civil Unrest</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Severity *</label>
+          <select id="inc_severity"><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select>
+        </div>
+      </div>
+      <div class="form-row cols-1">
+        <div class="form-group"><label>Incident Description *</label><textarea id="inc_desc" placeholder="Describe what happened…" rows="3"></textarea></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Reported By</label><input type="text" id="inc_reporter" placeholder="Name / Role"></div>
+        <div class="form-group"><label>Status</label>
+          <select id="inc_status"><option>Open</option><option>In Progress</option><option>Closed</option></select>
+        </div>
+      </div>
+      <div class="form-row cols-1">
+        <div class="form-group"><label>Response / Actions Taken</label><textarea id="inc_response" placeholder="Describe response…" rows="2"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('incidentModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveIncident()">💾 Save Incident</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPAT MODAL -->
+<div class="modal-overlay" id="expatModal">
+  <div class="modal" style="max-width:760px">
+    <div class="modal-header"><h3 id="expatModalTitle">Register Expatriate</h3><button class="modal-close" onclick="closeModal('expatModal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="expatEditId">
+      <div class="section-bar">Identity & Employment</div>
+      <div class="form-row">
+        <div class="form-group"><label>Full Name *</label><input type="text" id="ex_name" placeholder="Full legal name"></div>
+        <div class="form-group"><label>Nationality *</label><input type="text" id="ex_nationality"></div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Plant *</label>
+          <select id="ex_plant"><option value="">Select…</option><option>STG</option><option>Castel-Winery</option></select>
+        </div>
+        <div class="form-group"><label>Department</label><input type="text" id="ex_dept"></div>
+        <div class="form-group"><label>Position / Title</label><input type="text" id="ex_position"></div>
+      </div>
+      <div class="section-bar" style="margin-top:14px">Travel Documents</div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Passport Number</label><input type="text" id="ex_passport"></div>
+        <div class="form-group"><label>Passport Expiry</label><input type="date" id="ex_passport_exp"></div>
+        <div class="form-group"><label>⚡ Passport Status</label><input class="auto-field" id="ex_passport_status" readonly value="—"></div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Visa Type</label><input type="text" id="ex_visa_type" placeholder="e.g. Business Visa"></div>
+        <div class="form-group"><label>Visa Expiry</label><input type="date" id="ex_visa_exp" onchange="updateExpatDocStatus()"></div>
+        <div class="form-group"><label>⚡ Visa Status</label><input class="auto-field" id="ex_visa_status" readonly value="—"></div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Work Permit #</label><input type="text" id="ex_wp"></div>
+        <div class="form-group"><label>WP Expiry</label><input type="date" id="ex_wp_exp" onchange="updateExpatDocStatus()"></div>
+        <div class="form-group"><label>⚡ WP Status</label><input class="auto-field" id="ex_wp_status" readonly value="—"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Assignment Start</label><input type="date" id="ex_start"></div>
+        <div class="form-group"><label>Assignment End</label><input type="date" id="ex_end"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('expatModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveExpat()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- GUARD MODAL -->
+<div class="modal-overlay" id="guardModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="guardModalTitle">Add Guard Location</h3><button class="modal-close" onclick="closeModal('guardModal')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="guardEditId">
+      <div class="form-row">
+        <div class="form-group"><label>Plant / Location *</label><input type="text" id="gu_location" placeholder="e.g. Kombolcha – Main Gate"></div>
+        <div class="form-group"><label>Security Model</label>
+          <select id="gu_model"><option>Contract Only</option><option>Permanent Only</option><option>Hybrid</option></select>
+        </div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Contract Guards</label><input type="number" id="gu_contract" value="0" min="0" oninput="updateGuardCalc()"></div>
+        <div class="form-group"><label>Permanent Guards</label><input type="number" id="gu_permanent" value="0" min="0" oninput="updateGuardCalc()"></div>
+        <div class="form-group"><label>Supervisor</label><input type="number" id="gu_supervisor" value="0" min="0" oninput="updateGuardCalc()"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Required Strength</label><input type="number" id="gu_required" value="0" min="0" oninput="updateGuardCalc()"></div>
+        <div class="form-group"><label>⚡ Variance</label><input class="auto-field" id="gu_variance" readonly value="0"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('guardModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveGuard()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ─── STATE ───────────────────────────────────────────────────
+const DB_KEY = 'bgi_security_v1';
+
+const PLANTS = ['Kombolcha','STG','Hawassa','Castel-Winery','Meta','Raya','Zebidar'];
+const SUPERVISORS = {
+  'Kombolcha':'Belew Tadele','STG':'Corporate Security Team',
+  'Hawassa':'Ephrem Simano','Castel-Winery':'Kemal Aliyi',
+  'Meta':'Erko Gonfa','Raya':'Girmay','Zebidar':'Teklel Bereda'
+};
+const DOMAINS = ['Perimeter','Access Ctrl','CCTV','Guard Ops','Warehouse','Transport','Emergency','Infrastructure','Gate Pass','IQFS'];
+const DOMAIN_CONTROLS = {
+  'Perimeter':['Perimeter fence intact (min. 2.4m, no gaps)','Perimeter lighting operational (≥50 lux after dark)','Guards deployed at all perimeter posts','CCTV provides 100% perimeter coverage','Gates & barriers fitted with locks/barriers','Intrusion detection / alarm system operational','Randomised guard patrol routes in place','Security warning signage displayed','Anti-climb devices installed & maintained','Vegetation within 3m of fence maintained'],
+  'Access Ctrl':['Electronic access control system operational','Visitor registration & ID verification in place','Contractors issued temporary restricted passes','Biometric access at high-security zones','All vehicles logged at gate with driver ID','Key management register current & complete','Access rights reviewed quarterly','Anti-tailgating measures at entry points','After-hours access strictly controlled','All personnel wearing visible ID badges'],
+  'CCTV':['Cameras cover all critical areas (entrances, warehouses, bays)','Footage retained minimum 30 days','CCTV control room staffed 24/7','Formal blind-spot audit within last 6 months','Camera maintenance schedule in place','Cameras have night vision / IR capability','PTZ cameras at key locations','Historical footage retrievable within 2 hours','DVR/NVR secured in access-controlled room','CCTV policy documented & compliant'],
+  'Guard Ops':['Guard staffing levels adequate for site','Guards comply with current SOPs','All guards trained & certified','Incident response within 5 mins of alert','Formal shift handover documented','Active supervisory layer with inspection records','All guards have functioning radios','Use-of-force policy communicated','Shift patterns prevent guard fatigue','Contracted security provider reviewed quarterly'],
+  'Warehouse':['Loading bays covered by CCTV & supervised','Shrinkage tracked monthly; investigated >0.5%','Dual-control for all product dispatch','Cargo seals applied, documented & verified','Dispatch quantities independently verified','Warehouse access restricted to authorised personnel','Racking systems inspected & certified','Temperature-controlled areas monitored with alarms','Formal weekly stock reconciliation','Waste/reject disposal monitored for diversion risk'],
+  'Transport':['All delivery vehicles fitted with GPS & immobilisers','Route risk assessment completed for all routes','Cargo areas sealed & locked before departure','Drivers received security awareness training','Journey management system with driver check-in','Armed escort protocol for high-risk routes','Tamper-evident seals on all outbound cargo','Breakdown & hijack emergency protocol documented','Third-party logistics providers security-vetted','All cargo discrepancies formally reported'],
+  'Emergency':['Emergency response plan documented & current','Evacuation drills conducted ≥ twice yearly','Fire detection & suppression installed & tested','Crisis management team defined with contacts','Mass notification / emergency comm system in place','First aiders & kits in all operational zones','Drill outcomes documented; corrective actions tracked','Business continuity plan covers security disruptions','Formal relationships with police, fire, ambulance','Backup power for all critical security systems'],
+  'Infrastructure':['Power substation fenced, locked & CCTV covered','Generator enclosure secured with restricted access','Water treatment facility access-controlled','Server room biometric access & access log maintained','Control room accessible to authorised personnel only','Documented response plan for utility failures','Hazardous materials stored in secured, labelled areas','Critical infrastructure nodes on dedicated CCTV','Maintenance contractors escorted in critical areas','Temperature, smoke, water & gas sensors in place'],
+  'Gate Pass':['Gate passes issued with sequential numbering system','Daily gate register maintained (inbound & outbound)','Visitor / contractor ID verified & recorded at gate','Vehicle registration & driver ID logged on entry/exit','Cargo manifest / delivery note checked & filed at gate','Outbound cargo exit pass / waybill verified at gate','Cargo seal number recorded on every sealed outbound load','Gate register signed off by supervisor each shift','Overstay / failed-return flagged to security supervisor','Gate documentation archived for minimum 12 months'],
+  'IQFS':['Standardised IQFS Gate Pass form (BGI-SEC-F-001) in use','Vehicle Entry/Exit Register (BGI-SEC-F-002) maintained','Visitor & Contractor Log (BGI-SEC-F-003) completed daily','Outbound Cargo Exit Pass / Waybill (BGI-SEC-F-004) applied','Inbound Delivery Manifest Check Sheet (BGI-SEC-F-005) used','Cargo Seal Register (BGI-SEC-F-006) maintained & up to date','Shift Handover & Gate Sign-Off (BGI-SEC-F-007) completed','Overstay Notification Form (BGI-SEC-F-008) used as required','Search & Inspection Record (BGI-SEC-F-009) completed','Daily Gate Activity Summary (BGI-SEC-F-011) submitted']
+};
+
+function loadDB() {
+  try { return JSON.parse(localStorage.getItem(DB_KEY)) || getDefaultDB(); }
+  catch(e) { return getDefaultDB(); }
+}
+function saveDB(db) { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+
+function getDefaultDB() {
+  const db = {
+    assets: getDefaultAssets(),
+    risks: getDefaultRisks(),
+    actions: [],
+    incidents: [],
+    expats: [],
+    guards: getDefaultGuards(),
+    assessments: {}
+  };
+  // Init assessment data
+  PLANTS.forEach(p => {
+    db.assessments[p] = {};
+    DOMAINS.forEach(d => {
+      db.assessments[p][d] = DOMAIN_CONTROLS[d].map(()=>({score:3,compliant:false,observations:'',officer:'',status:'Open',dueDate:''}));
+    });
+  });
+  return db;
+}
+
+function getDefaultAssets(){
+  return [
+    {id:'a1',plant:'Kombolcha',name:'Main Power Substation',cat:'Electrical Infrastructure',assetId:'KOM-EL-001',crit:5,value:4500000,owner:'Plant Engineer',location:'North Perimeter',controls:'Fenced, padlocked, no CCTV',vuln:'High',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a2',plant:'Kombolcha',name:'Production Brewhouse',cat:'Production Equipment',assetId:'KOM-PR-001',crit:5,value:85000000,owner:'Production Manager',location:'Building A',controls:'CCTV, access control',vuln:'Medium',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a3',plant:'Kombolcha',name:'Finished Goods Warehouse',cat:'Inventory / Warehouse',assetId:'KOM-WH-001',crit:4,value:22000000,owner:'Warehouse Supervisor',location:'Building C',controls:'Locked, guard supervised',vuln:'Medium',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a4',plant:'Kombolcha',name:'Server / IT Room',cat:'IT Infrastructure',assetId:'KOM-IT-001',crit:4,value:3200000,owner:'IT Manager',location:'Admin Block',controls:'Biometric access, no UPS backup',vuln:'High',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a5',plant:'Kombolcha',name:'Borehole No. 4 Water Source',cat:'Utilities / Water',assetId:'KOM-UT-001',crit:3,value:800000,owner:'Facilities Manager',location:'Site Perimeter',controls:'Padlocked enclosure only',vuln:'High',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a6',plant:'Kombolcha',name:'Vehicle Fleet (7 trucks)',cat:'Transport Assets',assetId:'KOM-TR-001',crit:3,value:9800000,owner:'Logistics Supervisor',location:'Vehicle Yard',controls:'GPS fitted, nightly check',vuln:'Low',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a7',plant:'STG — Main Gate',name:'Corporate Data Centre',cat:'IT Infrastructure',assetId:'STG-IT-001',crit:5,value:12000000,owner:'IT Director',location:'Corporate Building',controls:'Biometric, CCTV, fire suppression',vuln:'Medium',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a8',plant:'STG — Main Gate',name:'Main Distribution Warehouse',cat:'Inventory / Warehouse',assetId:'STG-WH-001',crit:5,value:45000000,owner:'Logistics Director',location:'Warehouse Zone',controls:'CCTV, guards, access control',vuln:'Medium',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a9',plant:'STG — Main Gate',name:'Fuel Storage Facility',cat:'Hazardous Materials',assetId:'STG-HZ-001',crit:4,value:2100000,owner:'HSE Manager',location:'South Compound',controls:'Fenced, labelled, limited CCTV',vuln:'High',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a10',plant:'STG — Main Gate',name:'Main Gate Entry Control',cat:'Access Infrastructure',assetId:'STG-AC-001',crit:4,value:650000,owner:'Security Manager',location:'Main Entrance',controls:'Boom gate, guard post, CCTV',vuln:'Medium',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a11',plant:'STG — Main Gate',name:'Emergency Generator',cat:'Electrical Infrastructure',assetId:'STG-EL-001',crit:4,value:3800000,owner:'Facilities Manager',location:'Generator Bay',controls:'Fenced, padlocked',vuln:'Medium',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a12',plant:'STG — Kera Tech. Workshop',name:'Technical Workshop Equipment',cat:'Production Equipment',assetId:'KER-PR-001',crit:3,value:7500000,owner:'Technical Manager',location:'Kera Workshop',controls:'Security guard, padlock',vuln:'Medium',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a13',plant:'Hawassa',name:'Bottling & Packaging Line',cat:'Production Equipment',assetId:'HAW-PR-001',crit:5,value:110000000,owner:'Production Manager',location:'Production Hall',controls:'CCTV, access control, guards',vuln:'Low',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a14',plant:'Hawassa',name:'Export Warehouse',cat:'Inventory / Warehouse',assetId:'HAW-WH-001',crit:5,value:38000000,owner:'Warehouse Supervisor',location:'Export Zone',controls:'CCTV, sealed store, guards',vuln:'Medium',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a15',plant:'Hawassa',name:'Water Treatment Plant',cat:'Utilities / Water',assetId:'HAW-UT-001',crit:5,value:6500000,owner:'Facilities Manager',location:'Treatment Area',controls:'Perimeter fence, limited CCTV',vuln:'High',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a16',plant:'Hawassa',name:'Laboratory / QC Equipment',cat:'Production Equipment',assetId:'HAW-QC-001',crit:3,value:4200000,owner:'QC Manager',location:'Lab Block',controls:'Locked room, sign-in register',vuln:'Medium',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a17',plant:'Hawassa',name:'Cold Storage Rooms',cat:'Production Equipment',assetId:'HAW-CS-001',crit:3,value:5800000,owner:'Production Manager',location:'Cold Store Zone',controls:'Temp monitoring, padlock',vuln:'Medium',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a18',plant:'Castel-Winery',name:'Wine Production Vats & Fermentation',cat:'Production Equipment',assetId:'CAS-PR-001',crit:5,value:95000000,owner:'Winery Manager',location:'Production Hall',controls:'CCTV, limited access zones',vuln:'Medium',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a19',plant:'Castel-Winery',name:'Bottling Line (Wine)',cat:'Production Equipment',assetId:'CAS-PR-002',crit:4,value:42000000,owner:'Production Manager',location:'Bottling Hall',controls:'CCTV, guard supervised',vuln:'Low',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a20',plant:'Castel-Winery',name:'Finished Wine Warehouse',cat:'Inventory / Warehouse',assetId:'CAS-WH-001',crit:5,value:55000000,owner:'Warehouse Supervisor',location:'Bonded Store',controls:'Dual-key, CCTV, guard',vuln:'Medium',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a21',plant:'Castel-Winery',name:'GM Residence Security Systems',cat:'Residential Security',assetId:'CAS-RS-001',crit:3,value:320000,owner:'Security Manager',location:'GM Residence',controls:'Guard post, perimeter wall',vuln:'Medium',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a22',plant:'Meta',name:'Main Brewing & Fermentation Plant',cat:'Production Equipment',assetId:'MET-PR-001',crit:5,value:125000000,owner:'Plant Manager',location:'Main Production Hall',controls:'CCTV, access control, guards',vuln:'Low',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a23',plant:'Meta',name:'Furi Finished Goods Store',cat:'Inventory / Warehouse',assetId:'MET-WH-001',crit:4,value:28000000,owner:'Warehouse Supervisor',location:'Furi Store',controls:'Guard, padlocked, no CCTV',vuln:'High',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a24',plant:'Meta',name:'Borehole No. 8',cat:'Utilities / Water',assetId:'MET-UT-001',crit:3,value:650000,owner:'Facilities Manager',location:'Site Perimeter',controls:'Perimeter fence only',vuln:'High',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a25',plant:'Meta',name:'Main Power Supply & Substation',cat:'Electrical Infrastructure',assetId:'MET-EL-001',crit:5,value:5200000,owner:'Plant Engineer',location:'Utility Zone',controls:'Fenced, padlocked, CCTV',vuln:'Medium',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a26',plant:'Raya',name:'Raya Brewery Production Line',cat:'Production Equipment',assetId:'RAY-PR-001',crit:5,value:98000000,owner:'Plant Manager',location:'Main Production Hall',controls:'CCTV, access control, guards',vuln:'Low',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a27',plant:'Raya',name:'Malt Storage Warehouse',cat:'Inventory / Warehouse',assetId:'RAY-WH-001',crit:4,value:12000000,owner:'Warehouse Supervisor',location:'Malt Warehouse',controls:'Guard post, padlocked',vuln:'Medium',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a28',plant:'Raya',name:'Spring Water Source',cat:'Utilities / Water',assetId:'RAY-UT-001',crit:4,value:1200000,owner:'Facilities Manager',location:'Spring Water Site',controls:'Fenced, padlocked',vuln:'High',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a29',plant:'Raya',name:'Guest House & Accommodation',cat:'Residential Security',assetId:'RAY-RS-001',crit:2,value:950000,owner:'Admin Manager',location:'Guest House',controls:'Guard post, wall',vuln:'Low',threat:'Low',reviewDate:'',status:'Open'},
+    {id:'a30',plant:'Zebidar',name:'Zebidar Brewery Production Line',cat:'Production Equipment',assetId:'ZEB-PR-001',crit:5,value:88000000,owner:'Plant Manager',location:'Main Production Hall',controls:'CCTV, guards, access control',vuln:'Medium',threat:'Medium',reviewDate:'',status:'Open'},
+    {id:'a31',plant:'Zebidar',name:'Main Warehouse',cat:'Inventory / Warehouse',assetId:'ZEB-WH-001',crit:4,value:18000000,owner:'Warehouse Supervisor',location:'Warehouse Zone',controls:'Guard, padlocked',vuln:'Medium',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a32',plant:'Zebidar',name:'Main Gate Access Control',cat:'Access Infrastructure',assetId:'ZEB-AC-001',crit:4,value:420000,owner:'Security Manager',location:'Main Gate',controls:'Manual boom, guard post',vuln:'High',threat:'High',reviewDate:'',status:'Open'},
+    {id:'a33',plant:'Zebidar',name:'Emergency Generator',cat:'Electrical Infrastructure',assetId:'ZEB-EL-001',crit:3,value:2600000,owner:'Plant Engineer',location:'Generator Room',controls:'Locked room, no CCTV',vuln:'Medium',threat:'Medium',reviewDate:'',status:'Open'},
+  ];
+}
+
+function getDefaultRisks(){
+  return [
+    {id:'r1',plant:'Kombolcha',desc:'Unprotected power substation vulnerable to sabotage',cat:'Perimeter Breach',likelihood:5,impact:5,owner:'Plant Engineer',status:'Open',mitigation:'Immediate CCTV installation required'},
+    {id:'r2',plant:'Kombolcha',desc:'IT Room lacks UPS backup — data loss risk during outages',cat:'IT / Cyber Risk',likelihood:4,impact:5,owner:'IT Manager',status:'Open',mitigation:'UPS procurement in budget cycle'},
+    {id:'r3',plant:'STG',desc:'Main gate access control system outdated',cat:'Access Control Failure',likelihood:3,impact:4,owner:'Security Manager',status:'In Progress',mitigation:'Biometric upgrade underway'},
+    {id:'r4',plant:'Castel-Winery',desc:'Bonded wine warehouse perimeter fence gaps identified',cat:'Perimeter Breach',likelihood:3,impact:4,owner:'Security Manager',status:'In Progress',mitigation:'Fencing contractor engaged'},
+    {id:'r5',plant:'Hawassa',desc:'Water treatment plant lacks adequate CCTV coverage',cat:'Perimeter Breach',likelihood:4,impact:5,owner:'Facilities Manager',status:'Open',mitigation:'Camera installation required within 72h'},
+    {id:'r6',plant:'Meta',desc:'Furi Store has no CCTV — insider threat risk high',cat:'Insider Threat / Diversion',likelihood:4,impact:4,owner:'Warehouse Supervisor',status:'Open',mitigation:'CCTV + access control upgrade'},
+  ];
+}
+
+function getDefaultGuards(){
+  return [
+    {id:'g1',location:'Kombolcha',model:'Contract Only',contract:12,permanent:0,supervisor:1,required:15},
+    {id:'g2',location:'STG',model:'Contract Only',contract:18,permanent:0,supervisor:1,required:20},
+    {id:'g3',location:'Hawassa',model:'Contract Only',contract:14,permanent:0,supervisor:1,required:16},
+    {id:'g4',location:'Castel-Winery',model:'Permanent Only',contract:0,permanent:10,supervisor:1,required:12},
+    {id:'g5',location:'Meta',model:'Contract Only',contract:10,permanent:0,supervisor:1,required:12},
+    {id:'g6',location:'Raya',model:'Permanent Only',contract:0,permanent:8,supervisor:1,required:10},
+    {id:'g7',location:'Zebidar',model:'Contract Only',contract:8,permanent:0,supervisor:1,required:10},
+  ];
+}
+
+let db = loadDB();
+
+// ─── RISK CALCULATION ─────────────────────────────────────────
+function vulnNum(v){ return v==='Low'?1:v==='Medium'?2:v==='High'?4:0; }
+function calcRiskScore(crit,vuln,threat){
+  const vn=vulnNum(vuln), tn=vulnNum(threat);
+  if(!crit||!vn||!tn) return null;
+  return Math.round(crit * Math.sqrt(vn * tn));
+}
+function riskRating(score){
+  if(score===null||score===undefined||isNaN(score)) return '—';
+  if(score>=20) return 'CRITICAL';
+  if(score>=10) return 'HIGH';
+  if(score>=5)  return 'MEDIUM';
+  return 'LOW';
+}
+function riskBadge(rating){
+  const map={CRITICAL:'badge-critical',HIGH:'badge-high',MEDIUM:'badge-medium',LOW:'badge-low'};
+  return `<span class="badge ${map[rating]||''}">${rating||'—'}</span>`;
+}
+function statusBadge(s){
+  const map={Open:'badge-open','In Progress':'badge-progress',Closed:'badge-closed','N/A':'badge-na'};
+  return `<span class="badge ${map[s]||'badge-na'}">${s||'—'}</span>`;
+}
+function riskScoreFromLI(l,i){ return l&&i ? l*i : null; }
+function riskRatingFromScore(s){
+  if(!s) return '—';
+  if(s>=20) return 'CRITICAL';
+  if(s>=10) return 'HIGH';
+  if(s>=5)  return 'MEDIUM';
+  return 'LOW';
+}
+
+// ─── CLOCK ────────────────────────────────────────────────────
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clock').textContent=
+    now.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+setInterval(updateClock,60000); updateClock();
+
+// ─── NAVIGATION ───────────────────────────────────────────────
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelector(`.nav-item[onclick*="'${id}'"]`).classList.add('active');
+  // Render page
+  const renders={dashboard:renderDashboard,assets:renderAssets,guards:renderGuards,
+                  risks:renderRisks,actions:renderActions,incidents:renderIncidents,
+                  expats:renderExpats,assessment:renderAssessment};
+  if(renders[id]) renders[id]();
+}
+
+function applyGlobalFilter(){
+  const v=document.getElementById('globalPlantFilter').value;
+  ['assetPlantFilter','assessPlantSelect','riskPlantFilter','actionPlantFilter',
+   'incidentPlantFilter'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && v!=='All'){
+      // set value if option exists
+      [...el.options].forEach(o=>{ if(o.value===v||o.text===v) el.value=o.value; });
+    }
+  });
+}
+
+// ─── MODAL HELPERS ────────────────────────────────────────────
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
+});
+
+// ─── TOAST ────────────────────────────────────────────────────
+function toast(msg, type=''){
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=`<span>${type==='success'?'✅':type==='error'?'❌':'💾'}</span> ${msg}`;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(()=>t.remove(),3000);
+}
+
+// ─── ID GENERATOR ─────────────────────────────────────────────
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+// ─── DASHBOARD ────────────────────────────────────────────────
+function renderDashboard(){
+  const assets=db.assets;
+  const scores=assets.map(a=>calcRiskScore(a.crit,a.vuln,a.threat));
+  const critical=scores.filter(s=>s>=20).length;
+  const high=scores.filter(s=>s>=10&&s<20).length;
+  const openActions=db.actions.filter(a=>a.status!=='Closed').length;
+
+  document.getElementById('dash-critical').textContent=critical;
+  document.getElementById('dash-high').textContent=high;
+  document.getElementById('dash-open-actions').textContent=openActions;
+  document.getElementById('dash-total-assets').textContent=assets.length;
+
+  // Nav badges
+  document.getElementById('nb-critical').textContent=critical||'';
+  document.getElementById('nb-risks').textContent=db.risks.filter(r=>r.status!=='Closed').length||'';
+  document.getElementById('nb-actions').textContent=openActions||'';
+  document.getElementById('nb-incidents').textContent=db.incidents.filter(i=>i.status!=='Closed').length||'';
+
+  // Scorecard
+  const sb=document.getElementById('scorecardBody');
+  sb.innerHTML=PLANTS.map(p=>{
+    const ass=db.assessments[p]||{};
+    const domScores=DOMAINS.map(d=>{
+      const items=ass[d]||[];
+      if(!items.length) return 3;
+      return +(items.reduce((s,i)=>s+i.score,0)/items.length).toFixed(1);
+    });
+    const overall=(domScores.reduce((a,b)=>a+b,0)/domScores.length).toFixed(1);
+    const sc=s=>{ const n=Math.round(s); return `<span class="domain-score score-${n}" style="background:${scoreColor(n)};color:#fff">${s}</span>`; };
+    return `<tr>
+      <td><strong>${p}</strong><br><small style="color:var(--text-lt)">${SUPERVISORS[p]||''}</small></td>
+      <td>${sc(domScores[0])}</td><td>${sc(domScores[1])}</td>
+      <td>${sc(domScores[3])}</td><td>${sc(domScores[4])}</td>
+      <td>${sc(domScores[6])}</td>
+      <td><strong>${sc(overall)}</strong></td>
+    </tr>`;
+  }).join('');
+
+  // Asset by plant
+  const apb=document.getElementById('assetByPlantBody');
+  apb.innerHTML=PLANTS.map(p=>{
+    const pa=assets.filter(a=>a.plant===p||a.plant.startsWith(p));
+    const ps=pa.map(a=>calcRiskScore(a.crit,a.vuln,a.threat));
+    const c=ps.filter(s=>s>=20).length;
+    const h=ps.filter(s=>s>=10&&s<20).length;
+    const m=ps.filter(s=>s>=5&&s<10).length;
+    const l=ps.filter(s=>s<5).length;
+    const pct=pa.length?Math.round((c+h)/pa.length*100)+'%':'—';
+    return `<tr>
+      <td><strong>${p}</strong></td>
+      <td>${pa.length}</td>
+      <td style="color:var(--red);font-weight:700">${c}</td>
+      <td style="color:var(--orange);font-weight:700">${h}</td>
+      <td style="color:#b8860b">${m}</td>
+      <td style="color:var(--green)">${l}</td>
+      <td><strong>${pct}</strong></td>
+    </tr>`;
+  }).join('');
+
+  // Recent incidents
+  const ri=db.incidents.slice(-10).reverse();
+  const rib=document.getElementById('recentIncidentsBody');
+  document.getElementById('noIncidents').style.display=ri.length?'none':'block';
+  rib.innerHTML=ri.map(i=>`<tr>
+    <td class="mono">${i.date||'—'}</td>
+    <td>${i.plant}</td>
+    <td>${i.type}</td>
+    <td>${riskBadge(i.severity?.toUpperCase())}</td>
+    <td>${statusBadge(i.status)}</td>
+  </tr>`).join('');
+
+  // Open risks
+  const or=db.risks.filter(r=>r.status!=='Closed').slice(0,8);
+  const orb=document.getElementById('openRisksBody');
+  document.getElementById('noRisks').style.display=or.length?'none':'block';
+  orb.innerHTML=or.map(r=>{
+    const s=riskScoreFromLI(r.likelihood,r.impact);
+    return `<tr>
+      <td>${r.plant}</td>
+      <td style="max-width:180px;white-space:normal">${r.desc}</td>
+      <td>${riskBadge(riskRatingFromScore(s))}</td>
+      <td>${statusBadge(r.status)}</td>
+    </tr>`;
+  }).join('');
+
+  // Guard summary
+  const gsb=document.getElementById('guardSummaryBody');
+  gsb.innerHTML=db.guards.map(g=>{
+    const total=g.contract+g.permanent+g.supervisor;
+    const variance=total-g.required;
+    const status=variance>=0?'✅ At/Above Strength':'⚠ Below Strength';
+    const statusCl=variance<0?'color:var(--red)':'color:var(--green)';
+    return `<tr>
+      <td><strong>${g.location}</strong></td>
+      <td>${g.model}</td>
+      <td>${g.contract}</td>
+      <td>${g.permanent}</td>
+      <td>${SUPERVISORS[g.location]||'—'}</td>
+      <td><strong>${total}</strong></td>
+      <td>${g.required}</td>
+      <td style="${variance>=0?'color:var(--green)':'color:var(--red)'}"><strong>${variance>=0?'+'+variance:variance}</strong></td>
+      <td style="${statusCl}">${status}</td>
+    </tr>`;
+  }).join('');
+}
+
+function scoreColor(n){
+  if(n<=2) return '#c62828';
+  if(n<=3) return '#f57f17';
+  if(n<=4) return '#2e7d32';
+  return '#1565c0';
+}
+
+// ─── ASSETS ───────────────────────────────────────────────────
+function renderAssets(){
+  const pf=document.getElementById('assetPlantFilter').value;
+  const rf=document.getElementById('assetRatingFilter').value;
+  const cf=document.getElementById('assetCatFilter').value;
+  const sf=document.getElementById('assetSearch').value.toLowerCase();
+
+  let list=db.assets.filter(a=>{
+    const score=calcRiskScore(a.crit,a.vuln,a.threat);
+    const rating=riskRating(score);
+    if(pf && !a.plant.includes(pf)) return false;
+    if(rf && rating!==rf) return false;
+    if(cf && a.cat!==cf) return false;
+    if(sf && !a.name.toLowerCase().includes(sf) && !a.assetId.toLowerCase().includes(sf)) return false;
+    return true;
+  });
+
+  const critical=list.filter(a=>riskRating(calcRiskScore(a.crit,a.vuln,a.threat))==='CRITICAL').length;
+  const high=list.filter(a=>riskRating(calcRiskScore(a.crit,a.vuln,a.threat))==='HIGH').length;
+  document.getElementById('a-total').textContent=db.assets.length;
+  document.getElementById('a-critical').textContent=critical;
+  document.getElementById('a-high').textContent=high;
+  document.getElementById('a-pct').textContent=list.length?Math.round((critical+high)/list.length*100)+'%':'—';
+
+  document.getElementById('nb-critical').textContent=critical||'';
+
+  const tbody=document.getElementById('assetsBody');
+  document.getElementById('assetsEmpty').style.display=list.length?'none':'block';
+  tbody.innerHTML=list.map((a,i)=>{
+    const score=calcRiskScore(a.crit,a.vuln,a.threat);
+    const rating=riskRating(score);
+    return `<tr>
+      <td class="mono">${i+1}</td>
+      <td>${a.plant}</td>
+      <td><strong>${a.name}</strong></td>
+      <td><small>${a.cat}</small></td>
+      <td class="mono" style="font-size:.7rem">${a.assetId}</td>
+      <td style="text-align:center"><span class="score-pill score-${a.crit}">${a.crit}</span></td>
+      <td style="text-align:right" class="mono">${a.value?Number(a.value).toLocaleString():'—'}</td>
+      <td>${a.owner}</td>
+      <td style="font-size:.75rem">${a.location}</td>
+      <td>${a.vuln}</td>
+      <td>${a.threat}</td>
+      <td style="text-align:center;font-family:'DM Mono',monospace;font-weight:700">${score??'—'}</td>
+      <td>${riskBadge(rating)}</td>
+      <td>${statusBadge(a.status)}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="editAsset('${a.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteAsset('${a.id}')">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openAssetModal(){
+  document.getElementById('assetEditId').value='';
+  document.getElementById('assetModalTitle').textContent='Add Critical Asset';
+  ['a_plant','a_cat','a_name','a_id','a_owner','a_location','a_controls','a_date'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.value='';
+  });
+  ['a_crit','a_vuln','a_threat','a_status'].forEach(id=>{ document.getElementById(id).selectedIndex=0; });
+  document.getElementById('a_value').value='';
+  document.getElementById('a_score_display').value='—';
+  document.getElementById('a_rating_display').value='—';
+  openModal('assetModal');
+}
+
+function editAsset(id){
+  const a=db.assets.find(x=>x.id===id); if(!a) return;
+  document.getElementById('assetEditId').value=id;
+  document.getElementById('assetModalTitle').textContent='Edit Asset';
+  document.getElementById('a_plant').value=a.plant;
+  document.getElementById('a_cat').value=a.cat;
+  document.getElementById('a_name').value=a.name;
+  document.getElementById('a_id').value=a.assetId;
+  document.getElementById('a_owner').value=a.owner;
+  document.getElementById('a_location').value=a.location;
+  document.getElementById('a_controls').value=a.controls;
+  document.getElementById('a_crit').value=a.crit;
+  document.getElementById('a_vuln').value=a.vuln;
+  document.getElementById('a_threat').value=a.threat;
+  document.getElementById('a_value').value=a.value||'';
+  document.getElementById('a_date').value=a.reviewDate||'';
+  document.getElementById('a_status').value=a.status||'Open';
+  const score=calcRiskScore(a.crit,a.vuln,a.threat);
+  document.getElementById('a_score_display').value=score??'—';
+  document.getElementById('a_rating_display').value=riskRating(score);
+  openModal('assetModal');
+}
+
+// Live score preview in modal
+['a_crit','a_vuln','a_threat'].forEach(id=>{
+  document.getElementById(id).addEventListener('change',()=>{
+    const crit=+document.getElementById('a_crit').value;
+    const vuln=document.getElementById('a_vuln').value;
+    const threat=document.getElementById('a_threat').value;
+    const score=calcRiskScore(crit,vuln,threat);
+    document.getElementById('a_score_display').value=score??'—';
+    document.getElementById('a_rating_display').value=riskRating(score);
+  });
+});
+
+function saveAsset(){
+  const plant=document.getElementById('a_plant').value;
+  const name=document.getElementById('a_name').value.trim();
+  const crit=+document.getElementById('a_crit').value;
+  if(!plant||!name||!crit){ toast('Please fill required fields (Plant, Name, Criticality)','error'); return; }
+  const obj={
+    id:document.getElementById('assetEditId').value||uid(),
+    plant,name,
+    cat:document.getElementById('a_cat').value,
+    assetId:document.getElementById('a_id').value.trim(),
+    crit,
+    value:+document.getElementById('a_value').value||0,
+    owner:document.getElementById('a_owner').value,
+    location:document.getElementById('a_location').value.trim(),
+    controls:document.getElementById('a_controls').value.trim(),
+    vuln:document.getElementById('a_vuln').value,
+    threat:document.getElementById('a_threat').value,
+    reviewDate:document.getElementById('a_date').value,
+    status:document.getElementById('a_status').value
+  };
+  const idx=db.assets.findIndex(x=>x.id===obj.id);
+  if(idx>=0) db.assets[idx]=obj; else db.assets.push(obj);
+  saveDB(db); closeModal('assetModal'); renderAssets(); toast('Asset saved','success');
+}
+
+function deleteAsset(id){
+  if(!confirm('Delete this asset?')) return;
+  db.assets=db.assets.filter(a=>a.id!==id);
+  saveDB(db); renderAssets(); toast('Asset deleted');
+}
+
+// ─── ASSESSMENT ───────────────────────────────────────────────
+function renderAssessment(){
+  const plant=document.getElementById('assessPlantSelect').value;
+  document.getElementById('assessSupervisor').textContent=SUPERVISORS[plant]||'—';
+  const ass=db.assessments[plant]||{};
+
+  // Domain score summary
+  const dss=document.getElementById('domainScoreSummary');
+  dss.innerHTML=DOMAINS.map(d=>{
+    const items=ass[d]||[];
+    const avg=items.length?(items.reduce((s,i)=>s+i.score,0)/items.length).toFixed(1):3;
+    const n=Math.round(avg);
+    return `<div style="text-align:center;padding:10px;background:var(--slate);border-radius:var(--r-sm)">
+      <div class="domain-score score-${n}" style="background:${scoreColor(n)};color:#fff;margin:0 auto 6px;width:36px;height:36px;line-height:36px;font-size:.9rem">${avg}</div>
+      <div style="font-size:.68rem;font-weight:600;color:var(--text-lt)">${d}</div>
+    </div>`;
+  }).join('');
+
+  // Sections
+  const container=document.getElementById('assessmentSections');
+  container.innerHTML=DOMAINS.map(d=>{
+    const items=ass[d]||DOMAIN_CONTROLS[d].map(()=>({score:3,compliant:false,observations:'',officer:'',status:'Open',dueDate:''}));
+    const avg=(items.reduce((s,i)=>s+i.score,0)/items.length).toFixed(1);
+    const compliantCount=items.filter(i=>i.compliant).length;
+    const pct=Math.round(compliantCount/items.length*100);
+    return `<div class="assessment-section">
+      <div class="card">
+        <div class="card-header" style="cursor:pointer" onclick="toggleSection(this)">
+          <h3>${d}</h3>
+          <span class="subtitle">${pct}% compliant · Avg: ${avg}/5</span>
+          <div class="progress-bar-wrap" style="width:100px;margin-left:12px">
+            <div class="progress-bar-fill" style="width:${pct}%;background:${scoreColor(Math.round(+avg))}"></div>
+          </div>
+          <span style="margin-left:8px;font-size:.8rem;color:rgba(255,255,255,.6)">▼</span>
+        </div>
+        <div class="section-content" style="overflow:hidden;max-height:2000px;transition:max-height .3s">
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr>
+                <th style="width:30px">#</th>
+                <th>Security Control</th>
+                <th style="width:90px;text-align:center">Compliant</th>
+                <th style="width:80px;text-align:center">Score (1–5)</th>
+                <th>Observations</th>
+                <th style="width:130px">Officer</th>
+                <th style="width:90px;text-align:center">Status</th>
+                <th style="width:110px">Due Date</th>
+              </tr></thead>
+              <tbody>
+                ${items.map((item,i)=>`
+                  <tr>
+                    <td class="mono">${i+1}</td>
+                    <td style="font-size:.78rem">${DOMAIN_CONTROLS[d][i]||''}</td>
+                    <td style="text-align:center">
+                      <input type="checkbox" class="compliance-check" ${item.compliant?'checked':''} 
+                        onchange="updateAssessment('${plant}','${d}',${i},'compliant',this.checked)">
+                    </td>
+                    <td style="text-align:center">
+                      <select class="score-select" onchange="updateAssessment('${plant}','${d}',${i},'score',+this.value)">
+                        ${[1,2,3,4,5].map(n=>`<option value="${n}" ${item.score==n?'selected':''}>${n}</option>`).join('')}
+                      </select>
+                    </td>
+                    <td><input type="text" style="width:100%;border:none;background:transparent;font-size:.75rem;padding:2px 4px" 
+                        value="${item.observations||''}" placeholder="Observations…"
+                        onchange="updateAssessment('${plant}','${d}',${i},'observations',this.value)"></td>
+                    <td><input type="text" style="width:100%;border:none;background:transparent;font-size:.75rem;padding:2px 4px"
+                        value="${item.officer||''}" placeholder="Officer name…"
+                        onchange="updateAssessment('${plant}','${d}',${i},'officer',this.value)"></td>
+                    <td style="text-align:center">
+                      <select style="font-size:.72rem;padding:2px 4px;border:1px solid var(--border);border-radius:3px" 
+                        onchange="updateAssessment('${plant}','${d}',${i},'status',this.value)">
+                        ${['Open','In Progress','Closed'].map(s=>`<option ${item.status===s?'selected':''}>${s}</option>`).join('')}
+                      </select>
+                    </td>
+                    <td><input type="date" style="font-size:.72rem;width:100%;border:1px solid var(--border);border-radius:3px;padding:2px 4px"
+                        value="${item.dueDate||''}"
+                        onchange="updateAssessment('${plant}','${d}',${i},'dueDate',this.value)"></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleSection(header){
+  const content=header.nextElementSibling;
+  if(!content) return;
+  const collapsed=content.style.maxHeight==='0px';
+  content.style.maxHeight=collapsed?'2000px':'0px';
+  header.querySelector('span:last-child').textContent=collapsed?'▼':'▶';
+}
+
+function updateAssessment(plant,domain,idx,field,value){
+  if(!db.assessments[plant]) db.assessments[plant]={};
+  if(!db.assessments[plant][domain])
+    db.assessments[plant][domain]=DOMAIN_CONTROLS[domain].map(()=>({score:3,compliant:false,observations:'',officer:'',status:'Open',dueDate:''}));
+  db.assessments[plant][domain][idx][field]=value;
+  saveDB(db);
+}
+
+// ─── GUARDS ───────────────────────────────────────────────────
+function renderGuards(){
+  const list=db.guards;
+  let totalDep=0, totalCon=0, totalPerm=0, atStrength=0;
+  list.forEach(g=>{
+    const dep=g.contract+g.permanent+g.supervisor;
+    totalDep+=dep; totalCon+=g.contract; totalPerm+=g.permanent;
+    if(dep>=g.required) atStrength++;
+  });
+  document.getElementById('g-total').textContent=totalDep;
+  document.getElementById('g-contract').textContent=totalCon;
+  document.getElementById('g-permanent').textContent=totalPerm;
+  document.getElementById('g-atstrength').textContent=atStrength;
+
+  const tbody=document.getElementById('guardsBody');
+  tbody.innerHTML=list.map(g=>{
+    const total=g.contract+g.permanent+g.supervisor;
+    const variance=total-g.required;
+    return `<tr>
+      <td><strong>${g.location}</strong></td>
+      <td>${g.model}</td>
+      <td>${g.contract}</td>
+      <td>${g.permanent}</td>
+      <td>${SUPERVISORS[g.location]||'—'}</td>
+      <td><strong>${total}</strong></td>
+      <td>${g.required}</td>
+      <td style="${variance>=0?'color:var(--green)':'color:var(--red)'}"><strong>${variance>=0?'+'+variance:variance}</strong></td>
+      <td>${variance>=0?'<span class="badge badge-closed">✅ At/Above Strength</span>':'<span class="badge badge-open">⚠ Below Strength</span>'}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="editGuard('${g.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteGuard('${g.id}')">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function updateGuardCalc(){
+  const c=+document.getElementById('gu_contract').value||0;
+  const p=+document.getElementById('gu_permanent').value||0;
+  const s=+document.getElementById('gu_supervisor').value||0;
+  const r=+document.getElementById('gu_required').value||0;
+  document.getElementById('gu_variance').value=(c+p+s-r);
+}
+
+function editGuard(id){
+  const g=db.guards.find(x=>x.id===id); if(!g) return;
+  document.getElementById('guardEditId').value=id;
+  document.getElementById('guardModalTitle').textContent='Edit Location';
+  document.getElementById('gu_location').value=g.location;
+  document.getElementById('gu_model').value=g.model;
+  document.getElementById('gu_contract').value=g.contract;
+  document.getElementById('gu_permanent').value=g.permanent;
+  document.getElementById('gu_supervisor').value=g.supervisor;
+  document.getElementById('gu_required').value=g.required;
+  updateGuardCalc();
+  openModal('guardModal');
+}
+
+function saveGuard(){
+  const location=document.getElementById('gu_location').value.trim();
+  if(!location){ toast('Location name required','error'); return; }
+  const obj={
+    id:document.getElementById('guardEditId').value||uid(),
+    location,
+    model:document.getElementById('gu_model').value,
+    contract:+document.getElementById('gu_contract').value||0,
+    permanent:+document.getElementById('gu_permanent').value||0,
+    supervisor:+document.getElementById('gu_supervisor').value||0,
+    required:+document.getElementById('gu_required').value||0,
+  };
+  const idx=db.guards.findIndex(x=>x.id===obj.id);
+  if(idx>=0) db.guards[idx]=obj; else db.guards.push(obj);
+  saveDB(db); closeModal('guardModal'); renderGuards(); toast('Guard data saved','success');
+}
+
+function deleteGuard(id){
+  if(!confirm('Remove this location?')) return;
+  db.guards=db.guards.filter(g=>g.id!==id);
+  saveDB(db); renderGuards(); toast('Location removed');
+}
+
+// ─── RISKS ────────────────────────────────────────────────────
+function renderRisks(){
+  const pf=document.getElementById('riskPlantFilter').value;
+  const rf=document.getElementById('riskRatingFilter').value;
+  const sf=document.getElementById('riskStatusFilter').value;
+  let list=db.risks.filter(r=>{
+    const s=riskScoreFromLI(r.likelihood,r.impact);
+    const rating=riskRatingFromScore(s);
+    if(pf && r.plant!==pf) return false;
+    if(rf && rating!==rf) return false;
+    if(sf && r.status!==sf) return false;
+    return true;
+  });
+  const tbody=document.getElementById('risksBody');
+  document.getElementById('risksEmpty').style.display=list.length?'none':'block';
+  tbody.innerHTML=list.map((r,i)=>{
+    const s=riskScoreFromLI(r.likelihood,r.impact);
+    return `<tr>
+      <td class="mono">${i+1}</td>
+      <td>${r.plant}</td>
+      <td style="max-width:220px;white-space:normal;font-size:.78rem">${r.desc}</td>
+      <td><small>${r.cat}</small></td>
+      <td style="text-align:center">${r.likelihood}</td>
+      <td style="text-align:center">${r.impact}</td>
+      <td style="text-align:center;font-weight:700;font-family:'DM Mono',monospace">${s??'—'}</td>
+      <td>${riskBadge(riskRatingFromScore(s))}</td>
+      <td>${r.owner||'—'}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="editRisk('${r.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteRisk('${r.id}')">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('nb-risks').textContent=db.risks.filter(x=>x.status!=='Closed').length||'';
+}
+
+// Live score in risk modal
+['r_likelihood','r_impact'].forEach(id=>{
+  document.getElementById(id).addEventListener('change',()=>{
+    const l=+document.getElementById('r_likelihood').value;
+    const i=+document.getElementById('r_impact').value;
+    document.getElementById('r_score_display').value=l&&i?l*i:'—';
+  });
+});
+
+function editRisk(id){
+  const r=db.risks.find(x=>x.id===id); if(!r) return;
+  document.getElementById('riskEditId').value=id;
+  document.getElementById('riskModalTitle').textContent='Edit Risk';
+  document.getElementById('r_plant').value=r.plant;
+  document.getElementById('r_cat').value=r.cat;
+  document.getElementById('r_desc').value=r.desc;
+  document.getElementById('r_likelihood').value=r.likelihood;
+  document.getElementById('r_impact').value=r.impact;
+  document.getElementById('r_score_display').value=r.likelihood*r.impact;
+  document.getElementById('r_owner').value=r.owner;
+  document.getElementById('r_status').value=r.status;
+  document.getElementById('r_mitigation').value=r.mitigation||'';
+  openModal('riskModal');
+}
+
+function saveRisk(){
+  const plant=document.getElementById('r_plant').value;
+  const desc=document.getElementById('r_desc').value.trim();
+  const l=+document.getElementById('r_likelihood').value;
+  const imp=+document.getElementById('r_impact').value;
+  if(!plant||!desc||!l||!imp){ toast('Fill all required fields','error'); return; }
+  const obj={
+    id:document.getElementById('riskEditId').value||uid(),
+    plant,desc,cat:document.getElementById('r_cat').value,
+    likelihood:l,impact:imp,
+    owner:document.getElementById('r_owner').value,
+    status:document.getElementById('r_status').value,
+    mitigation:document.getElementById('r_mitigation').value.trim()
+  };
+  const idx=db.risks.findIndex(x=>x.id===obj.id);
+  if(idx>=0) db.risks[idx]=obj; else db.risks.push(obj);
+  saveDB(db); closeModal('riskModal'); renderRisks(); toast('Risk saved','success');
+}
+
+function deleteRisk(id){
+  if(!confirm('Delete this risk?')) return;
+  db.risks=db.risks.filter(r=>r.id!==id);
+  saveDB(db); renderRisks(); toast('Risk deleted');
+}
+
+// ─── ACTIONS ─────────────────────────────────────────────────
+function renderActions(){
+  const pf=document.getElementById('actionPlantFilter').value;
+  const sf=document.getElementById('actionStatusFilter').value;
+  const prf=document.getElementById('actionPriorityFilter').value;
+  let list=db.actions.filter(a=>{
+    if(pf && a.plant!==pf) return false;
+    if(sf && a.status!==sf) return false;
+    if(prf && a.priority!==prf) return false;
+    return true;
+  });
+  const tbody=document.getElementById('actionsBody');
+  document.getElementById('actionsEmpty').style.display=list.length?'none':'block';
+  tbody.innerHTML=list.map((a,i)=>{
+    const overdue=a.dueDate&&new Date(a.dueDate)<new Date()&&a.status!=='Closed';
+    return `<tr ${overdue?'style="background:#fff5f5"':''}>
+      <td class="mono">${i+1}</td>
+      <td>${a.plant}</td>
+      <td style="max-width:220px;white-space:normal;font-size:.78rem">${a.desc}</td>
+      <td>${riskBadge(a.priority?.toUpperCase())}</td>
+      <td>${a.owner||'—'}</td>
+      <td class="mono" style="${overdue?'color:var(--red);font-weight:700':''}">${a.dueDate||'—'}</td>
+      <td class="mono" style="text-align:right">${a.budget?Number(a.budget).toLocaleString():'—'}</td>
+      <td>${statusBadge(a.status)}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="editAction('${a.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteAction('${a.id}')">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('nb-actions').textContent=db.actions.filter(x=>x.status!=='Closed').length||'';
+}
+
+function editAction(id){
+  const a=db.actions.find(x=>x.id===id); if(!a) return;
+  document.getElementById('actionEditId').value=id;
+  document.getElementById('actionModalTitle').textContent='Edit Action';
+  document.getElementById('ac_plant').value=a.plant;
+  document.getElementById('ac_priority').value=a.priority;
+  document.getElementById('ac_desc').value=a.desc;
+  document.getElementById('ac_owner').value=a.owner;
+  document.getElementById('ac_due').value=a.dueDate||'';
+  document.getElementById('ac_budget').value=a.budget||'';
+  document.getElementById('ac_status').value=a.status;
+  openModal('actionModal');
+}
+
+function saveAction(){
+  const plant=document.getElementById('ac_plant').value;
+  const desc=document.getElementById('ac_desc').value.trim();
+  if(!plant||!desc){ toast('Fill required fields','error'); return; }
+  const obj={
+    id:document.getElementById('actionEditId').value||uid(),
+    plant,desc,
+    priority:document.getElementById('ac_priority').value,
+    owner:document.getElementById('ac_owner').value,
+    dueDate:document.getElementById('ac_due').value,
+    budget:+document.getElementById('ac_budget').value||0,
+    status:document.getElementById('ac_status').value
+  };
+  const idx=db.actions.findIndex(x=>x.id===obj.id);
+  if(idx>=0) db.actions[idx]=obj; else db.actions.push(obj);
+  saveDB(db); closeModal('actionModal'); renderActions(); toast('Action saved','success');
+}
+
+function deleteAction(id){
+  if(!confirm('Delete this action?')) return;
+  db.actions=db.actions.filter(a=>a.id!==id);
+  saveDB(db); renderActions(); toast('Action deleted');
+}
+
+// ─── INCIDENTS ────────────────────────────────────────────────
+function renderIncidents(){
+  const pf=document.getElementById('incidentPlantFilter').value;
+  const tf=document.getElementById('incidentTypeFilter').value;
+  const sf=document.getElementById('incidentSeverityFilter').value;
+  let list=db.incidents.filter(i=>{
+    if(pf && i.plant!==pf) return false;
+    if(tf && i.type!==tf) return false;
+    if(sf && i.severity!==sf) return false;
+    return true;
+  }).slice().reverse();
+  const tbody=document.getElementById('incidentsBody');
+  const empty=document.getElementById('incidentsEmpty');
+  empty.style.display=list.length?'none':'block';
+  tbody.innerHTML=list.map((inc,i)=>`<tr>
+    <td class="mono">INC-${String(db.incidents.indexOf(inc)+1).padStart(3,'0')}</td>
+    <td class="mono" style="font-size:.75rem">${inc.date||'—'}</td>
+    <td>${inc.plant}</td>
+    <td>${inc.type}</td>
+    <td style="max-width:200px;white-space:normal;font-size:.75rem">${inc.desc}</td>
+    <td>${riskBadge(inc.severity?.toUpperCase())}</td>
+    <td style="font-size:.75rem">${inc.reporter||'—'}</td>
+    <td style="max-width:180px;white-space:normal;font-size:.75rem">${inc.response||'—'}</td>
+    <td>${statusBadge(inc.status)}</td>
+    <td>
+      <button class="btn btn-ghost btn-sm" onclick="editIncident('${inc.id}')">✏️</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteIncident('${inc.id}')">🗑</button>
+    </td>
+  </tr>`).join('');
+  document.getElementById('nb-incidents').textContent=db.incidents.filter(x=>x.status!=='Closed').length||'';
+}
+
+function editIncident(id){
+  const inc=db.incidents.find(x=>x.id===id); if(!inc) return;
+  document.getElementById('incidentEditId').value=id;
+  document.getElementById('incidentModalTitle').textContent='Edit Incident';
+  document.getElementById('inc_date').value=inc.date||'';
+  document.getElementById('inc_plant').value=inc.plant;
+  document.getElementById('inc_type').value=inc.type;
+  document.getElementById('inc_severity').value=inc.severity;
+  document.getElementById('inc_desc').value=inc.desc;
+  document.getElementById('inc_reporter').value=inc.reporter||'';
+  document.getElementById('inc_status').value=inc.status;
+  document.getElementById('inc_response').value=inc.response||'';
+  openModal('incidentModal');
+}
+
+function saveIncident(){
+  const plant=document.getElementById('inc_plant').value;
+  const desc=document.getElementById('inc_desc').value.trim();
+  const type=document.getElementById('inc_type').value;
+  if(!plant||!desc||!type){ toast('Fill required fields','error'); return; }
+  const obj={
+    id:document.getElementById('incidentEditId').value||uid(),
+    date:document.getElementById('inc_date').value,
+    plant,type,desc,
+    severity:document.getElementById('inc_severity').value,
+    reporter:document.getElementById('inc_reporter').value,
+    status:document.getElementById('inc_status').value,
+    response:document.getElementById('inc_response').value.trim()
+  };
+  const idx=db.incidents.findIndex(x=>x.id===obj.id);
+  if(idx>=0) db.incidents[idx]=obj; else db.incidents.push(obj);
+  saveDB(db); closeModal('incidentModal'); renderIncidents(); toast('Incident logged','success');
+}
+
+function deleteIncident(id){
+  if(!confirm('Delete this incident?')) return;
+  db.incidents=db.incidents.filter(i=>i.id!==id);
+  saveDB(db); renderIncidents(); toast('Incident deleted');
+}
+
+// ─── EXPATS ───────────────────────────────────────────────────
+function docStatus(expiryDate){
+  if(!expiryDate) return {text:'—',cls:''};
+  const today=new Date(); today.setHours(0,0,0,0);
+  const exp=new Date(expiryDate);
+  const days=Math.round((exp-today)/(1000*60*60*24));
+  if(days<0) return {text:'⛔ EXPIRED',cls:'badge-open'};
+  if(days<=60) return {text:`⚠ EXPIRING (${days}d)`,cls:'badge-progress'};
+  return {text:'✔ VALID',cls:'badge-closed'};
+}
+
+function updateExpatDocStatus(){
+  ['visa','wp','passport'].forEach(type=>{
+    const expField=document.getElementById(`ex_${type}_exp`)||document.getElementById(`ex_${type==='passport'?'passport_exp':''}`)
+    if(!expField) return;
+    const d=expField.value;
+    const s=docStatus(d);
+    const f=document.getElementById(`ex_${type==='passport'?'passport_status':type+'_status'}`);
+    if(f) f.value=s.text;
+  });
+}
+
+// Wire up passport date too
+document.getElementById('ex_passport_exp').addEventListener('change',updateExpatDocStatus);
+
+function renderExpats(){
+  const list=db.expats;
+  const today=new Date(); today.setHours(0,0,0,0);
+  let visaWarn=0,wpWarn=0,valid=0;
+  list.forEach(e=>{
+    const vs=docStatus(e.visaExp);
+    const ws=docStatus(e.wpExp);
+    if(vs.text.includes('EXPIR')) visaWarn++;
+    if(ws.text.includes('EXPIR')) wpWarn++;
+    if(vs.text.includes('VALID')&&ws.text.includes('VALID')) valid++;
+  });
+  document.getElementById('exp-total').textContent=list.length;
+  document.getElementById('exp-visa-warn').textContent=visaWarn;
+  document.getElementById('exp-wp-warn').textContent=wpWarn;
+  document.getElementById('exp-valid').textContent=valid;
+
+  const tbody=document.getElementById('expatsBody');
+  document.getElementById('expatsEmpty').style.display=list.length?'none':'block';
+  tbody.innerHTML=list.map((e,i)=>{
+    const vs=docStatus(e.visaExp);
+    const ws=docStatus(e.wpExp);
+    const ps=docStatus(e.passportExp);
+    const overall=(vs.cls==='badge-open'||ws.cls==='badge-open')?'badge-open':
+      (vs.cls==='badge-progress'||ws.cls==='badge-progress')?'badge-progress':'badge-closed';
+    const overallText=overall==='badge-open'?'⛔ URGENT':overall==='badge-progress'?'⚠ ATTENTION':'✔ ALL VALID';
+    return `<tr>
+      <td class="mono">EXP-${String(i+1).padStart(3,'0')}</td>
+      <td><strong>${e.name}</strong></td>
+      <td>${e.nationality}</td>
+      <td class="mono" style="font-size:.72rem">${e.passport||'—'}</td>
+      <td class="mono" style="font-size:.72rem">${e.passportExp||'—'}</td>
+      <td><span class="badge ${ps.cls}" style="font-size:.65rem">${ps.text}</span></td>
+      <td style="font-size:.75rem">${e.visaType||'—'}</td>
+      <td class="mono" style="font-size:.72rem">${e.visaExp||'—'}</td>
+      <td><span class="badge ${vs.cls}" style="font-size:.65rem">${vs.text}</span></td>
+      <td class="mono" style="font-size:.72rem">${e.wp||'—'}</td>
+      <td class="mono" style="font-size:.72rem">${e.wpExp||'—'}</td>
+      <td><span class="badge ${ws.cls}" style="font-size:.65rem">${ws.text}</span></td>
+      <td>${e.plant}</td>
+      <td style="font-size:.75rem">${e.position||'—'}</td>
+      <td><span class="badge ${overall}">${overallText}</span></td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="editExpat('${e.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteExpat('${e.id}')">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function editExpat(id){
+  const e=db.expats.find(x=>x.id===id); if(!e) return;
+  document.getElementById('expatEditId').value=id;
+  document.getElementById('expatModalTitle').textContent='Edit Expatriate';
+  document.getElementById('ex_name').value=e.name;
+  document.getElementById('ex_nationality').value=e.nationality;
+  document.getElementById('ex_plant').value=e.plant;
+  document.getElementById('ex_dept').value=e.dept||'';
+  document.getElementById('ex_position').value=e.position||'';
+  document.getElementById('ex_passport').value=e.passport||'';
+  document.getElementById('ex_passport_exp').value=e.passportExp||'';
+  document.getElementById('ex_visa_type').value=e.visaType||'';
+  document.getElementById('ex_visa_exp').value=e.visaExp||'';
+  document.getElementById('ex_wp').value=e.wp||'';
+  document.getElementById('ex_wp_exp').value=e.wpExp||'';
+  document.getElementById('ex_start').value=e.start||'';
+  document.getElementById('ex_end').value=e.end||'';
+  updateExpatDocStatus();
+  openModal('expatModal');
+}
+
+function saveExpat(){
+  const name=document.getElementById('ex_name').value.trim();
+  const plant=document.getElementById('ex_plant').value;
+  if(!name||!plant){ toast('Name and plant required','error'); return; }
+  const obj={
+    id:document.getElementById('expatEditId').value||uid(),
+    name, nationality:document.getElementById('ex_nationality').value,
+    plant, dept:document.getElementById('ex_dept').value,
+    position:document.getElementById('ex_position').value,
+    passport:document.getElementById('ex_passport').value,
+    passportExp:document.getElementById('ex_passport_exp').value,
+    visaType:document.getElementById('ex_visa_type').value,
+    visaExp:document.getElementById('ex_visa_exp').value,
+    wp:document.getElementById('ex_wp').value,
+    wpExp:document.getElementById('ex_wp_exp').value,
+    start:document.getElementById('ex_start').value,
+    end:document.getElementById('ex_end').value
+  };
+  const idx=db.expats.findIndex(x=>x.id===obj.id);
+  if(idx>=0) db.expats[idx]=obj; else db.expats.push(obj);
+  saveDB(db); closeModal('expatModal'); renderExpats(); toast('Expat saved','success');
+}
+
+function deleteExpat(id){
+  if(!confirm('Remove this expat?')) return;
+  db.expats=db.expats.filter(e=>e.id!==id);
+  saveDB(db); renderExpats(); toast('Expat removed');
+}
+
+// ─── DATA I/O ─────────────────────────────────────────────────
+function exportData(){
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`BGI_Security_Data_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  toast('Data exported','success');
+}
+
+function importData(){
+  document.getElementById('importFile').click();
+}
+
+function handleImport(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const imported=JSON.parse(ev.target.result);
+      if(!imported.assets) throw new Error('Invalid format');
+      db=imported; saveDB(db); renderDashboard();
+      toast('Data imported successfully','success');
+    } catch(err){
+      toast('Import failed: invalid file','error');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+function clearAllData(){
+  if(!confirm('⚠ Clear ALL data? This cannot be undone.\n\nExport first to back up.')) return;
+  if(!confirm('Confirm: delete all security data?')) return;
+  db=getDefaultDB(); saveDB(db); renderDashboard();
+  toast('All data cleared','error');
+}
+
+function exportTableCSV(tableId, filename){
+  const table=document.getElementById(tableId);
+  if(!table){ toast('Table not found','error'); return; }
+  let csv='';
+  for(const row of table.rows){
+    const cols=[...row.cells].map(cell=>'"'+(cell.innerText||'').replace(/"/g,'""').replace(/\n/g,' ')+'"');
+    csv+=cols.join(',')+'\n';
+  }
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`${filename}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('CSV exported','success');
+}
+
+function printSection(pageId){
+  window.print();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+renderDashboard();
+renderAssets();
+</script>
+</body>
+</html>
